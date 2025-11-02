@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.14.36603.0 d17.14
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Browser", "Browser.csproj", "{C5B8B547-5832-484B-9C09-FFD26F85F1F2}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x64 = Debug|x64
+		Release|Any CPU = Release|Any CPU
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Debug|x64.ActiveCfg = Debug|x64
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Debug|x64.Build.0 = Debug|x64
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Release|x64.ActiveCfg = Release|x64
+		{C5B8B547-5832-484B-9C09-FFD26F85F1F2}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AE54EC9C-7505-42A7-ADEF-0838F72C78A8}
+	EndGlobalSection
+EndGlobal
