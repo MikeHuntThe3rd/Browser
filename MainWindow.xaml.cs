@@ -35,6 +35,11 @@ namespace Browser
         private void UrlInput(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
+            if (URL.Text == URL_History[URL_History.Count() - 1])
+            {
+                if (URL.Text.Length != 0) _Page.Reload();
+                return;
+            }
             ProcessURL(URL.Text);
         }
         private void ProcessURL(string url, bool record = true)
