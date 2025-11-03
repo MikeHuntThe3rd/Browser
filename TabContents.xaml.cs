@@ -26,7 +26,7 @@ namespace Browser
     {
         private ChromiumWebBrowser _Page;
         private List<string> URL_History = new List<string>() { "" };
-        private int HistoryIndex;
+        private int HistoryIndex = 0;
         public TabContents()
         {
             InitializeComponent();
