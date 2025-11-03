@@ -34,7 +34,7 @@ namespace Browser
             TabItem NewTab = new TabItem()
             {
                 HeaderTemplate = (DataTemplate)tabs.FindResource("tab_header_button_wrapper"),
-                Content = new TabContetnts()
+                Content = new TabContents()
             };
             Grid.SetRow(NewTab, 1);
             tabs.Items.Add(NewTab);

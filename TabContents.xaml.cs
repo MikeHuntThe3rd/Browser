@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -21,12 +22,12 @@ namespace Browser
     /// <summary>
     /// Interaction logic for TabContetnts.xaml
     /// </summary>
-    public partial class TabContetnts : UserControl
+    public partial class TabContents : UserControl
     {
         private ChromiumWebBrowser _Page;
         private List<string> URL_History = new List<string>() { "" };
         private int HistoryIndex;
-        public TabContetnts()
+        public TabContents()
         {
             InitializeComponent();
         }
@@ -52,7 +53,7 @@ namespace Browser
             }
             else
             {
-                _Page = new ChromiumWebBrowser(url)
+                _Page = new ChromiumWebBrowser($"https://www.google.com/search?q={Uri.EscapeDataString(url)}")
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
                     VerticalAlignment = VerticalAlignment.Stretch,
