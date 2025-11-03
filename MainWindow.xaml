@@ -14,7 +14,7 @@
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
     </Window.Resources>
-    <Grid x:Name="Tabgrid" Background="Transparent">
+    <Grid x:Name="Tabgrid">
         <TabControl x:Name="tabs">
             <TabControl.Template>
                 <ControlTemplate TargetType="TabControl">

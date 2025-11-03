@@ -34,6 +34,7 @@ namespace Browser
         private void _Page_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             URL.Text = _Page.Address;
+            //RecordHistory(URL.Text);
         }
         private void ProcessURL(string url, bool record = true)
         {
@@ -53,11 +54,10 @@ namespace Browser
             }
             else
             {
-                _Page = new ChromiumWebBrowser($"https://www.google.com/search?q={Uri.EscapeDataString(url)}")
+                _Page = new ChromiumWebBrowser(url)
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
-                    VerticalAlignment = VerticalAlignment.Stretch,
-                    Margin = new Thickness(0, 10, 0, 0)
+                    VerticalAlignment = VerticalAlignment.Stretch
                 };
                 Grid.SetRow(_Page, 1);
                 Grid.SetColumnSpan(_Page, 4);
