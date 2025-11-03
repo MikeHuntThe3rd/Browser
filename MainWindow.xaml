@@ -14,17 +14,13 @@
         Title="MainWindow" Height="450" Width="800">
     <Window.Resources>
     </Window.Resources>
-    <Grid x:Name="grid" Background="White">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="50" />
-            <RowDefinition Height="*" />
-        </Grid.RowDefinitions>
+    <Grid x:Name="Tabgrid" Background="Transparent">
         <TabControl x:Name="tabs">
             <TabControl.Template>
                 <ControlTemplate TargetType="TabControl">
                     <Grid Background="#EEE" MouseDown="Drag">
                         <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
 
@@ -36,15 +32,13 @@
 
                             <TabPanel x:Name="HeaderPanel" IsItemsHost="True" Grid.Column="0"/>
 
-                            <StackPanel Orientation="Horizontal" 
-                           Grid.Column="1">
-                                <Button Content="+" Click="NewTab_Click"/>
-                                <Button Content="—" Click="Minimize_Click"/>
-                                <Button Content="□" Click="Maximize_Click"/>
-                                <Button Content="X" Click="Close_Click"/>
+                            <StackPanel Orientation="Horizontal" Grid.Column="1">
+                                <Button Content="+" Width="50" Click="NewTab_Click"/>
+                                <Button Content="—" Width="50" Click="Minimize_Click"/>
+                                <Button Content="□" Width="50" Click="Maximize_Click"/>
+                                <Button Content="X" Width="50" Click="Close_Click"/>
                             </StackPanel>
                         </Grid>
-
                         <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1"/>
                     </Grid>
                 </ControlTemplate>
@@ -58,24 +52,10 @@
                             <ColumnDefinition Width="30"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="window" HorizontalAlignment="Left" />
-                        <Button x:Name="colse_tab" Grid.Column="1" Content="cls" HorizontalAlignment="Stretch" Click="colse_tab_Click"/>
+                        <Button x:Name="colse_tab" Grid.Column="1" Content="cls" HorizontalAlignment="Stretch" Click="close_tab_Click"/>
                     </Grid>
                 </DataTemplate>
             </TabControl.Resources>
-            <TabItem HeaderTemplate="{StaticResource tab_header_button_wrapper}">
-                <Grid>
-                    <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="30" />
-                        <ColumnDefinition Width="*" />
-                    </Grid.ColumnDefinitions>
-                    <Button x:Name="back" Grid.Row="0" Grid.Column="0" Content="Back" IsEnabled="False" Click="back_Click"/>
-                    <Button x:Name="foward" Grid.Row="0" Grid.Column="1" Content="Forward" IsEnabled="False" Click="foward_Click"/>
-                    <Button x:Name="refresh" Grid.Row="0" Grid.Column="2" Content="Refresh" IsEnabled="False" Click="refresh_Click"/>
-                    <TextBox x:Name="URL" Grid.Row="0" Grid.Column="3" KeyDown="UrlInput"/>
-                </Grid>
-            </TabItem>
         </TabControl>
     </Grid>
 </Window>
