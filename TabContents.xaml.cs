@@ -36,7 +36,19 @@ namespace Browser
             URL.Text = _Page.Address;
             //RecordHistory(URL.Text);
         }
-        private void ProcessURL(string url, bool record = true)
+        private bool IsURL_Valid(string url)
+        {
+            if (url.Contains("http://") ||
+                url.Contains("https://") ||
+                url.Contains("www.") ||
+                url.Contains(".com") ||
+                url.Contains(".net") ||
+                url.Contains(".org") ||
+                url.Contains(".io") ||
+                url.Contains("localhost:")) return true;
+            return false;
+        }
+        private void ProcessURL(string url, bool isURL, bool record = true)
         {
             if (url.Length == 0)
             {
@@ -48,12 +60,14 @@ namespace Browser
             }
             if (_Page != null)
             {
+                url = (isURL) ? url : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page.Load(url);
                 URL.Text = url;
                 if (record) RecordHistory(url);
             }
             else
             {
+                url = (isURL) ? url: $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page = new ChromiumWebBrowser(url)
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -62,11 +76,19 @@ namespace Browser
                 Grid.SetRow(_Page, 1);
                 Grid.SetColumnSpan(_Page, 4);
                 _Page.AddressChanged += _Page_AddressChanged;
+                _Page.LoadError += _Page_LoadError;
                 grid.Children.Add(_Page);
                 URL.Text = url;
                 if (record) RecordHistory(url);
             }
             EnableDisableButtons();
+        }
+        private void _Page_LoadError(object sender, LoadErrorEventArgs e)
+        {
+            if (e.Frame.IsMain)
+            {
+                _Page.Dispatcher.Invoke(()=> { ProcessURL(e.FailedUrl, false, false); });
+            }
         }
         private void DropBrowserInstance()
         {
@@ -107,7 +129,7 @@ namespace Browser
                 if (URL.Text.Length != 0) _Page.Reload();
                 return;
             }
-            ProcessURL(URL.Text);
+            ProcessURL(URL.Text, IsURL_Valid(URL.Text));
         }
         private void back_Click(object sender, RoutedEventArgs e)
         {
@@ -119,7 +141,7 @@ namespace Browser
             }
             else
             {
-                ProcessURL(url, false);
+                ProcessURL(url, IsURL_Valid(url), false);
             }
             URL.Text = url;
             EnableDisableButtons();
@@ -134,7 +156,7 @@ namespace Browser
             }
             else
             {
-                ProcessURL(url, false);
+                ProcessURL(url, IsURL_Valid(url), false);
             }
             URL.Text = url;
             EnableDisableButtons();
