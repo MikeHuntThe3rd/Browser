@@ -27,6 +27,7 @@ namespace Browser
         private ChromiumWebBrowser _Page;
         private List<string> URL_History = new List<string>() { "" };
         private int HistoryIndex = 0;
+        private bool Page_Loaded = false;
         public TabContents()
         {
             InitializeComponent();
@@ -34,6 +35,9 @@ namespace Browser
         private void _Page_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             URL.Text = _Page.Address;
+            if(Page_Loaded) RecordHistory(URL.Text);
+            Page_Loaded = true;
+            EnableDisableButtons();
             //RecordHistory(URL.Text);
         }
         private bool IsURL_Valid(string url)
@@ -52,21 +56,21 @@ namespace Browser
         {
             if (url.Length == 0)
             {
+                Page_Loaded = record;
                 HomePage();
                 URL.Text = url;
-                if (record) RecordHistory(url);
-                EnableDisableButtons();
                 return;
             }
             if (_Page != null)
             {
+                Page_Loaded = record;
                 url = (isURL) ? url : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page.Load(url);
                 URL.Text = url;
-                if (record) RecordHistory(url);
             }
             else
             {
+                Page_Loaded = record;
                 url = (isURL) ? url: $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page = new ChromiumWebBrowser(url)
                 {
@@ -79,13 +83,11 @@ namespace Browser
                 _Page.LoadError += _Page_LoadError;
                 grid.Children.Add(_Page);
                 URL.Text = url;
-                if (record) RecordHistory(url);
             }
-            EnableDisableButtons();
         }
         private void _Page_LoadError(object sender, LoadErrorEventArgs e)
         {
-            if (e.Frame.IsMain)
+            if (e.Frame.IsMain && e.ErrorCode == CefErrorCode.ConnectionFailed)
             {
                 _Page.Dispatcher.Invoke(()=> { ProcessURL(e.FailedUrl, false, false); });
             }
