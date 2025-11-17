@@ -7,11 +7,10 @@
         xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
         mc:Ignorable="d"
         WindowStyle="None"
-        AllowsTransparency="True"
         Background="Transparent"
         ResizeMode="CanResize"
         Loaded="Window_Loaded"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow">
     <Window.Resources>
     </Window.Resources>
     <Grid x:Name="Tabgrid">
@@ -23,21 +22,24 @@
                             <RowDefinition Height="30"/>
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
-
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5*"/>
                                 <ColumnDefinition Width="*"/>
-                                <ColumnDefinition Width="Auto"/>
                             </Grid.ColumnDefinitions>
-
                             <TabPanel x:Name="HeaderPanel" IsItemsHost="True" Grid.Column="0"/>
-
-                            <StackPanel Orientation="Horizontal" Grid.Column="1">
-                                <Button Content="+" Width="50" Click="NewTab_Click"/>
-                                <Button Content="—" Width="50" Click="Minimize_Click"/>
-                                <Button Content="□" Width="50" Click="Maximize_Click"/>
-                                <Button Content="X" Width="50" Click="Close_Click"/>
-                            </StackPanel>
+                            <Grid Grid.Column="1">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <Button Content="+" Grid.Column="0" HorizontalAlignment="Stretch" Click="NewTab_Click"/>
+                                <Button Content="—" Grid.Column="1" HorizontalAlignment="Stretch" Click="Minimize_Click"/>
+                                <Button Content="□" Grid.Column="2" HorizontalAlignment="Stretch" Click="Maximize_Click"/>
+                                <Button Content="X" Grid.Column="3" HorizontalAlignment="Stretch" Click="Close_Click"/>
+                            </Grid>
                         </Grid>
                         <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1"/>
                     </Grid>
@@ -46,10 +48,10 @@
 
             <TabControl.Resources>
                 <DataTemplate x:Key="tab_header_button_wrapper">
-                    <Grid>
+                    <Grid MouseDown="Tab_Drag">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="51"/>
-                            <ColumnDefinition Width="30"/>
+                            <ColumnDefinition Width="2*"/>
+                            <ColumnDefinition Width="*"/>
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" Content="window" HorizontalAlignment="Left" />
                         <Button x:Name="colse_tab" Grid.Column="1" Content="cls" HorizontalAlignment="Stretch" Click="close_tab_Click"/>
