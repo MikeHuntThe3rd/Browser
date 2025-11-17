@@ -38,7 +38,6 @@ namespace Browser
             if(Page_Loaded) RecordHistory(URL.Text);
             Page_Loaded = true;
             EnableDisableButtons();
-            //RecordHistory(URL.Text);
         }
         private bool IsURL_Valid(string url)
         {
@@ -52,14 +51,14 @@ namespace Browser
                 url.Contains("localhost:")) return true;
             return false;
         }
-        private void ProcessURL(string url, bool isURL, bool record = true)
+        private string ProcessURL(string url, bool isURL, bool record = true)
         {
             if (url.Length == 0)
             {
                 Page_Loaded = record;
                 HomePage();
                 URL.Text = url;
-                return;
+                return url;
             }
             if (_Page != null)
             {
@@ -67,6 +66,7 @@ namespace Browser
                 url = (isURL) ? url : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page.Load(url);
                 URL.Text = url;
+                return url;
             }
             else
             {
@@ -83,13 +83,14 @@ namespace Browser
                 _Page.LoadError += _Page_LoadError;
                 grid.Children.Add(_Page);
                 URL.Text = url;
+                return url;
             }
         }
         private void _Page_LoadError(object sender, LoadErrorEventArgs e)
         {
-            if (e.Frame.IsMain && e.ErrorCode == CefErrorCode.ConnectionFailed)
+            if (e.Frame.IsMain)
             {
-                _Page.Dispatcher.Invoke(()=> { ProcessURL(e.FailedUrl, false, false); });
+                _Page.Dispatcher.Invoke(()=> { RecordHistory(ProcessURL(e.FailedUrl, false, false)); });
             }
         }
         private void DropBrowserInstance()
