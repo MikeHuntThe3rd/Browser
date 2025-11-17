@@ -20,7 +20,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="30"/>
                 </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="{Binding}" HorizontalAlignment="Left" Padding="6,0"/>
+                <Label Grid.Column="0" Content="cigi" HorizontalAlignment="Left" Padding="6,0"/>
                 <Button Grid.Column="1" Content="×" Click="close_tab_Click"
                         Background="Transparent" BorderThickness="0" Foreground="#B22222"
                         FontWeight="Bold" Cursor="Hand"/>
@@ -183,15 +183,6 @@
                     </Grid>
                 </ControlTemplate>
             </TabControl.Template>
-
-            <!-- Példa tabok -->
-            <TabItem Header="Lap 1" HeaderTemplate="{StaticResource tab_header_button_wrapper}">
-                <local:TabContents/>
-            </TabItem>
-            <TabItem Header="Lap 2" HeaderTemplate="{StaticResource tab_header_button_wrapper}">
-                <local:TabContents/>
-            </TabItem>
-
         </TabControl>
     </Grid>
 </Window>
