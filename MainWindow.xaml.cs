@@ -40,7 +40,7 @@ namespace Browser
             tabs.Items.Add(NewTab);
             tabs.SelectedItem = NewTab;
         }
-        private void Tab_Drag(object sender, MouseButtonEventArgs e) {
+        public void Tab_Drag(object sender, MouseButtonEventArgs e) {
             Window CurrWin = Window.GetWindow((DependencyObject)sender);
             if (tabs.Items.Count == 1) {
                 CurrWin.DragMove();
@@ -56,10 +56,8 @@ namespace Browser
                         tab_positions.Add(insert);
                     }
                 }
-
                 //tab_positions.ForEach(tab => MessageBox.Show(tab.Item1.ToString()));
             }
-            
         }
         #region window buttons
         private void close_tab_Click(object sender, RoutedEventArgs e)
@@ -80,17 +78,27 @@ namespace Browser
         }
         private void Drag(object sender, MouseButtonEventArgs e)
         {
-            Window.GetWindow((DependencyObject)sender).DragMove();
+            Window wn = Window.GetWindow((DependencyObject)sender);
+            if (wn.WindowState == WindowState.Maximized)
+            {
+                wn.WindowState = WindowState.Normal;
+                wn.Top  = 0.0;
+                wn.DragMove();
+            }
+            else
+            {
+                wn.DragMove();
+            }
         }
         private void Minimize_Click(object sender, RoutedEventArgs e)
         {
-            Window.GetWindow((Button)sender).WindowState = WindowState.Minimized;
+            Window.GetWindow((DependencyObject)sender).WindowState = WindowState.Minimized;
         }
         private void Maximize_Click(object sender, RoutedEventArgs e)
         {
 
-            if (Window.GetWindow((Button)sender).WindowState == WindowState.Maximized) Window.GetWindow((Button)sender).WindowState = WindowState.Normal;
-            else Window.GetWindow((Button)sender).WindowState = WindowState.Maximized;
+            if (Window.GetWindow((DependencyObject)sender).WindowState == WindowState.Maximized) Window.GetWindow((DependencyObject)sender).WindowState = WindowState.Normal;
+            else Window.GetWindow((DependencyObject)sender).WindowState = WindowState.Maximized;
 
         }
         private void Close_Click(object sender, RoutedEventArgs e)
