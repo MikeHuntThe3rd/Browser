@@ -40,6 +40,27 @@ namespace Browser
             tabs.Items.Add(NewTab);
             tabs.SelectedItem = NewTab;
         }
+        private void Tab_Drag(object sender, MouseButtonEventArgs e) {
+            Window CurrWin = Window.GetWindow((DependencyObject)sender);
+            if (tabs.Items.Count == 1) {
+                CurrWin.DragMove();
+            } 
+            else {
+                Point mouse = e.GetPosition(Window.GetWindow((DependencyObject)sender));
+                List<Tuple<Point, int>> tab_positions = new List<Tuple<Point, int>>();
+                foreach (TabItem item in tabs.Items) {
+                    if (item != FindVisualParent<TabItem>((DependencyObject)sender)) {
+                        Point pos = item.TransformToAncestor(CurrWin).Transform(new Point(0, 0));
+                        int size = (int)Math.Round(item.ActualWidth);
+                        Tuple<Point, int> insert = new Tuple<Point, int>(new Point(Math.Round(pos.X), Math.Round(pos.Y)), size);
+                        tab_positions.Add(insert);
+                    }
+                }
+
+                //tab_positions.ForEach(tab => MessageBox.Show(tab.Item1.ToString()));
+            }
+            
+        }
         #region window buttons
         private void close_tab_Click(object sender, RoutedEventArgs e)
         {
