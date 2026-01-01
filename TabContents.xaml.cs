@@ -27,7 +27,7 @@ namespace Browser
         private ChromiumWebBrowser _Page;
         private List<string> URL_History = new List<string>() { "" };
         private int HistoryIndex = 0;
-        private bool Page_Loaded = false;
+        private bool Page_Loaded = false, httpsFailed = false;
         public TabContents()
         {
             InitializeComponent();
@@ -41,13 +41,14 @@ namespace Browser
         }
         private bool IsURL_Valid(string url)
         {
-            if (url.Contains("http://") ||
-                url.Contains("https://") ||
+            if (url.Contains("https://") ||
+                url.Contains("http://") ||
                 url.Contains("www.") ||
                 url.Contains(".com") ||
                 url.Contains(".net") ||
                 url.Contains(".org") ||
                 url.Contains(".io") ||
+                url.Contains(".hu") ||
                 url.Contains("localhost:")) return true;
             return false;
         }
@@ -63,7 +64,7 @@ namespace Browser
             if (_Page != null)
             {
                 Page_Loaded = record;
-                url = (isURL) ? url : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
+                url = (isURL) ? https(url) : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page.Load(url);
                 URL.Text = url;
                 return url;
@@ -71,7 +72,7 @@ namespace Browser
             else
             {
                 Page_Loaded = record;
-                url = (isURL) ? url: $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
+                url = (isURL) ? https(url) : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 _Page = new ChromiumWebBrowser(url)
                 {
                     HorizontalAlignment = HorizontalAlignment.Stretch,
@@ -86,11 +87,32 @@ namespace Browser
                 return url;
             }
         }
+        private string https(string url)
+        {
+            if (!httpsFailed && url.Length >= 8 && !url.Substring(0, 8).Equals("https://") && url.Length >= 7 && !url.Substring(0, 7).Equals("http://"))
+            {
+                return "https://" + url;
+            }
+            else if(httpsFailed && url.Length >= 7 && !url.Substring(0, 7).Equals("http://"))
+            {
+                httpsFailed = false;
+                return "http://" + url.Substring(8);
+            }
+            return url;
+        }
         private void _Page_LoadError(object sender, LoadErrorEventArgs e)
         {
             if (e.Frame.IsMain)
             {
-                _Page.Dispatcher.Invoke(()=> { RecordHistory(ProcessURL(e.FailedUrl, false, false)); });
+                if(e.ErrorText == "ERR_CONNECTION_CLOSED")
+                {
+                    httpsFailed = true;
+                    _Page.Dispatcher.Invoke(() => { RecordHistory(ProcessURL(e.FailedUrl, true, false)); });
+                }
+                else
+                {
+                    _Page.Dispatcher.Invoke(() => { RecordHistory(ProcessURL(e.FailedUrl.Replace("http://", ""), false, false)); });
+                }
             }
         }
         private void DropBrowserInstance()
