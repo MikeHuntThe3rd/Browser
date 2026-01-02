@@ -166,32 +166,16 @@
             
             <dragablz:TabablzControl.HeaderSuffixContent>
                 <Grid Background="#EEE" MouseDown="Drag" x:Name="DragBar">
-                    <!--<Grid.RowDefinitions>
-                        <RowDefinition Height="36"/>
-                        <RowDefinition Height="*"/>
-                    </Grid.RowDefinitions>
-                    <Grid Grid.Row="0">
                         <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="5*"/>
-                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="*" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="20" />
+                            <ColumnDefinition Width="20" />
                         </Grid.ColumnDefinitions>
-
-                        <TabPanel x:Name="HeaderPanel" IsItemsHost="True" Grid.Column="0" Margin="8,0"/>
-                        <Grid Grid.Column="1">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                                <ColumnDefinition Width="*" />
-                            </Grid.ColumnDefinitions>
-                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="0" Content="+" ToolTip="Új lap" Click="NewTab_Click" Margin="0,0,4,0"/>
-                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="1" Content="—" ToolTip="Minimalizál" Click="Minimize_Click" Margin="0,0,4,0"/>
-                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="2" Content="□" ToolTip="Maximalizál" Click="Maximize_Click" Margin="0,0,4,0"/>
-                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="3" Content="X" ToolTip="Bezár" Click="Close_Click" Foreground="#B22222"/>
-                        </Grid>
-                    </Grid>-->
-                    <Label>asdasdasd</Label>
-                    <!--<ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="8"/>-->
+                        <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="0" HorizontalAlignment="Left" Content="+" ToolTip="Új lap" Click="NewTab_Click" Margin="0,0,4,0"/>
+                        <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="1" Content="—" ToolTip="Minimalizál" Click="Minimize_Click" Margin="0,0,4,0"/>
+                        <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="2" Content="□" ToolTip="Maximalizál" Click="Maximize_Click" Margin="0,0,4,0"/>
+                        <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="3" Content="X" ToolTip="Bezár" Click="Close_Click" Foreground="#B22222"/>
                 </Grid>
             </dragablz:TabablzControl.HeaderSuffixContent>
         </dragablz:TabablzControl>
