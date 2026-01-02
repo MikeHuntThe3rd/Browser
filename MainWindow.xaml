@@ -5,6 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Browser"
         xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+        xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         mc:Ignorable="d"
         WindowStyle="None"
         Background="Transparent"
@@ -13,20 +14,18 @@
         Title="MainWindow">
 
     <Window.Resources>
-        <!-- Tab Header DataTemplate -->
-        <DataTemplate x:Key="tab_header_button_wrapper">
-            <Grid MouseDown="Tab_Drag">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="30"/>
-                </Grid.ColumnDefinitions>
-                <Label Grid.Column="0" Content="cigi" HorizontalAlignment="Left" Padding="6,0"/>
-                <Button Grid.Column="1" Content="×" Click="close_tab_Click"
-                        Background="Transparent" BorderThickness="0" Foreground="#B22222"
-                        FontWeight="Bold" Cursor="Hand"/>
+        <ControlTemplate TargetType="{x:Type dragablz:TabablzControl}" x:Key="asd">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="36" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <dragablz:DragablzItemsControl x:Name="PART_HeaderItemsControl" Grid.Row="0" />
+                <Border Grid.Row="1">
+                    <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="8"/>
+                </Border>
             </Grid>
-        </DataTemplate>
-
+        </ControlTemplate>
         <!-- Chrome-like TabItem Style -->
         <Style TargetType="TabItem" x:Key="ChromeTabItemStyle">
             <Setter Property="Background" Value="Transparent"/>
@@ -83,7 +82,7 @@
         <Style TargetType="TabControl" x:Key="ChromeTabControlStyle">
             <Setter Property="Template">
                 <Setter.Value>
-                    <ControlTemplate TargetType="TabControl">
+                    <ControlTemplate TargetType="dragablz:TabablzControl">
                         <Grid Background="#EEE" KeyboardNavigation.TabNavigation="Local">
                             <Grid.RowDefinitions>
                                 <RowDefinition Height="36"/>
@@ -146,45 +145,55 @@
         </Style>
 
     </Window.Resources>
-    <!-- Main Grid -->
     <Grid x:Name="Tabgrid">
-        <TabControl x:Name="tabs"
-                    Style="{StaticResource ChromeTabControlStyle}"
-                    ItemContainerStyle="{StaticResource ChromeTabItemStyle}">
+        <dragablz:TabablzControl x:Name="tabs">
 
-            <!-- TabControl Header + Window Controls -->
-            <TabControl.Template>
-                <ControlTemplate TargetType="TabControl">
-                    <Grid Background="#EEE" MouseDown="Drag" x:Name="DragBar">
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="36"/>
-                            <RowDefinition Height="*"/>
-                        </Grid.RowDefinitions>
-                        <Grid Grid.Row="0">
-                            <Grid.ColumnDefinitions>
-                                <ColumnDefinition Width="5*"/>
-                                <ColumnDefinition Width="*"/>
-                            </Grid.ColumnDefinitions>
-
-                            <TabPanel x:Name="HeaderPanel" IsItemsHost="True" Grid.Column="0" Margin="8,0"/>
-                            <Grid Grid.Column="1">
-                                <Grid.ColumnDefinitions>
-                                    <ColumnDefinition Width="*" /> 
-                                    <ColumnDefinition Width="*" /> 
-                                    <ColumnDefinition Width="*" />
-                                    <ColumnDefinition Width="*" />
-                                </Grid.ColumnDefinitions>
-                                <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="0" Content="+" ToolTip="Új lap" Click="NewTab_Click" Margin="0,0,4,0"/>
-                                <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="1" Content="—" ToolTip="Minimalizál" Click="Minimize_Click" Margin="0,0,4,0"/>
-                                <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="2" Content="□" ToolTip="Maximalizál" Click="Maximize_Click" Margin="0,0,4,0"/>
-                                <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="3" Content="X" ToolTip="Bezár" Click="Close_Click" Foreground="#B22222"/>
-                            </Grid>
-                        </Grid>
-
-                        <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="8"/>
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController />
+            </dragablz:TabablzControl.InterTabController>
+            <dragablz:TabablzControl.HeaderItemTemplate>
+                <DataTemplate>
+                    <Grid MouseDown="Tab_Drag">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="30"/>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" Content="cigi" HorizontalAlignment="Left" Padding="6,0"/>
+                        <Button Grid.Column="1" Content="×" Click="close_tab_Click" Background="Transparent" BorderThickness="0" Foreground="#B22222" FontWeight="Bold" Cursor="Hand"/>
                     </Grid>
-                </ControlTemplate>
-            </TabControl.Template>
-        </TabControl>
+                </DataTemplate>
+            </dragablz:TabablzControl.HeaderItemTemplate>
+            
+            <dragablz:TabablzControl.HeaderSuffixContent>
+                <Grid Background="#EEE" MouseDown="Drag" x:Name="DragBar">
+                    <!--<Grid.RowDefinitions>
+                        <RowDefinition Height="36"/>
+                        <RowDefinition Height="*"/>
+                    </Grid.RowDefinitions>
+                    <Grid Grid.Row="0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="5*"/>
+                            <ColumnDefinition Width="*"/>
+                        </Grid.ColumnDefinitions>
+
+                        <TabPanel x:Name="HeaderPanel" IsItemsHost="True" Grid.Column="0" Margin="8,0"/>
+                        <Grid Grid.Column="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                                <ColumnDefinition Width="*" />
+                            </Grid.ColumnDefinitions>
+                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="0" Content="+" ToolTip="Új lap" Click="NewTab_Click" Margin="0,0,4,0"/>
+                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="1" Content="—" ToolTip="Minimalizál" Click="Minimize_Click" Margin="0,0,4,0"/>
+                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="2" Content="□" ToolTip="Maximalizál" Click="Maximize_Click" Margin="0,0,4,0"/>
+                            <Button Style="{StaticResource WindowControlButtonStyle}" Grid.Column="3" Content="X" ToolTip="Bezár" Click="Close_Click" Foreground="#B22222"/>
+                        </Grid>
+                    </Grid>-->
+                    <Label>asdasdasd</Label>
+                    <!--<ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="8"/>-->
+                </Grid>
+            </dragablz:TabablzControl.HeaderSuffixContent>
+        </dragablz:TabablzControl>
     </Grid>
 </Window>

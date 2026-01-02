@@ -1,5 +1,6 @@
 ﻿using CefSharp;
 using CefSharp.Wpf;
+using Dragablz;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +32,12 @@ namespace Browser
         }
         private void CreateTab()
         {
-            TabItem NewTab = new TabItem()
+            var NewTab = new TabItem()
             {
-                HeaderTemplate = (DataTemplate)tabs.FindResource("tab_header_button_wrapper"),
+                //Content = new TabContents()
                 Content = new TabContents()
             };
-            Grid.SetRow(NewTab, 1);
+            //Grid.SetRow(NewTab, 1);
             tabs.Items.Add(NewTab);
             tabs.SelectedItem = NewTab;
         }
