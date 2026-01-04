@@ -46,17 +46,11 @@ namespace Browser
             if (tabs.SelectedItem is Tab tab)
             {
                 TabHandler.Remove(tab);
-
                 if (TabHandler.Count == 0)
                 {
                     Close();
                 }
             }
-        }
-        private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
-        {
-            while (child != null && !(child is T)) child = VisualTreeHelper.GetParent(child);
-            return child as T;
         }
         private void Drag(object sender, MouseButtonEventArgs e)
         {
