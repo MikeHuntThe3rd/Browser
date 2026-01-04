@@ -1,10 +1,12 @@
-﻿using System;
+﻿using CefSharp;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using CefSharp.Wpf;
 
 namespace Browser
 {
@@ -13,5 +15,10 @@ namespace Browser
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            var settings = new CefSettings();
+            Cef.Initialize(settings);
+        }
     }
 }

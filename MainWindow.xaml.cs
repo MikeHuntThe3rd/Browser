@@ -3,11 +3,14 @@ using CefSharp.Wpf;
 using Dragablz;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
@@ -20,57 +23,35 @@ namespace Browser
 {
     public partial class MainWindow : Window
     {
+        public ObservableCollection<Tab> TabHandler { get; } = new ObservableCollection<Tab>(); 
         public MainWindow()
         {
-            var settings = new CefSettings();
-            Cef.Initialize(settings);
             InitializeComponent();
+            tabs.InterTabController = TabDragManager.CreateController();
+            tabs.ItemsSource = TabHandler;
         }
-        private void Window_Loaded(object sender, RoutedEventArgs e)
-        {
-            CreateTab();
-        }
+
         private void CreateTab()
         {
-            var NewTab = new TabItem()
-            {
-                //Content = new TabContents()
-                Content = new TabContents()
-            };
-            //Grid.SetRow(NewTab, 1);
-            tabs.Items.Add(NewTab);
-            tabs.SelectedItem = NewTab;
+            var NewTab = new Tab();
+            TabHandler.Add(NewTab);
         }
         public void Tab_Drag(object sender, MouseButtonEventArgs e) {
             Window CurrWin = Window.GetWindow((DependencyObject)sender);
-            if (tabs.Items.Count == 1) {
-                CurrWin.DragMove();
-            } 
-            else {
-                Point mouse = e.GetPosition(Window.GetWindow((DependencyObject)sender));
-                List<Tuple<Point, int>> tab_positions = new List<Tuple<Point, int>>();
-                foreach (TabItem item in tabs.Items) {
-                    if (item != FindVisualParent<TabItem>((DependencyObject)sender)) {
-                        Point pos = item.TransformToAncestor(CurrWin).Transform(new Point(0, 0));
-                        int size = (int)Math.Round(item.ActualWidth);
-                        Tuple<Point, int> insert = new Tuple<Point, int>(new Point(Math.Round(pos.X), Math.Round(pos.Y)), size);
-                        tab_positions.Add(insert);
-                    }
-                }
-                //tab_positions.ForEach(tab => MessageBox.Show(tab.Item1.ToString()));
-            }
+            CurrWin.DragMove();
         }
         #region window buttons
         private void close_tab_Click(object sender, RoutedEventArgs e)
         {
-            Button button = (Button)sender;
-            var tabItem = FindVisualParent<TabItem>(button);
-            if (tabItem != null && tabs.Items.Count - 1 == 0)
+            if (tabs.SelectedItem is Tab tab)
             {
-                Window.GetWindow((Button)sender).Close();
-                return;
+                TabHandler.Remove(tab);
+
+                if (TabHandler.Count == 0)
+                {
+                    Close();
+                }
             }
-            if (tabItem != null) tabs.Items.Remove(tabItem);
         }
         private static T FindVisualParent<T>(DependencyObject child) where T : DependencyObject
         {
