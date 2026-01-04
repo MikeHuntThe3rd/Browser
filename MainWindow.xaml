@@ -10,7 +10,6 @@
         WindowStyle="None"
         Background="Transparent"
         ResizeMode="CanResize"
-        Loaded="Window_Loaded"
         Title="MainWindow">
 
     <Window.Resources>
@@ -147,13 +146,9 @@
     </Window.Resources>
     <Grid x:Name="Tabgrid">
         <dragablz:TabablzControl x:Name="tabs">
-
-            <dragablz:TabablzControl.InterTabController>
-                <dragablz:InterTabController />
-            </dragablz:TabablzControl.InterTabController>
             <dragablz:TabablzControl.HeaderItemTemplate>
                 <DataTemplate>
-                    <Grid MouseDown="Tab_Drag">
+                    <Grid>
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="30"/>
@@ -163,7 +158,11 @@
                     </Grid>
                 </DataTemplate>
             </dragablz:TabablzControl.HeaderItemTemplate>
-            
+
+            <dragablz:TabablzControl.ContentTemplate>
+                <DataTemplate DataType="{x:Type local:Tab}">
+                </DataTemplate>
+            </dragablz:TabablzControl.ContentTemplate>
             <dragablz:TabablzControl.HeaderSuffixContent>
                 <Grid Background="#EEE" MouseDown="Drag" x:Name="DragBar">
                         <Grid.ColumnDefinitions>

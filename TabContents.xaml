@@ -146,7 +146,7 @@
                         Margin="12,0,0,0"
                         Height="36">
                     <Grid>
-                        <TextBox x:Name="URL"
+                        <TextBox Text="{Binding Url, Mode=TwoWay}"
                                  Background="Transparent"
                                  Foreground="Black"
                                  BorderThickness="0"
@@ -160,5 +160,11 @@
             </Grid>
         </Border>
 
+        <Border Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <cef:ChromiumWebBrowser Address="{Binding Url, Mode=OneWay}"
+                                    AddressChanged="_Page_AddressChanged"
+                                    LoadError="_Page_LoadError"
+                                    />
+        </Border>
     </Grid>
 </UserControl>
