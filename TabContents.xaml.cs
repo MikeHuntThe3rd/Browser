@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -19,12 +20,9 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace Browser
 {
-    /// <summary>
-    /// Interaction logic for TabContetnts.xaml
-    /// </summary>
     public partial class TabContents : UserControl
     {
-        private bool httpsFailed = false;
+        private bool httpsFailed = false, recordh = true;
         public Tab currTab => this.DataContext as Tab;
         public TabContents()
         {
@@ -32,7 +30,8 @@ namespace Browser
         }
         private void _Page_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            RecordHistory(currTab.Url);
+            currTab.Url = e.NewValue as string;
+            if(recordh) RecordHistory(currTab.Address);
             EnableDisableButtons();
         }
         private bool IsURL_Valid(string url)
@@ -53,13 +52,18 @@ namespace Browser
             if (url.Length == 0)
             {
                 HomePage();
-                currTab.Url = url;
+                currTab.Url = "";
+                recordh = false;
+                currTab.Address = "https://github.com";
+                record = true;
+                RecordHistory(currTab.Url);
                 return url;
             }
             else
             {
                 url = (isURL) ? https(url) : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 currTab.Url = url;
+                currTab.Address = url;
                 return url;
             }
         }
@@ -80,8 +84,7 @@ namespace Browser
         {
             if (e.Frame.IsMain)
             {
-                var browser = sender as ChromiumWebBrowser;
-                if(e.ErrorText == "ERR_CONNECTION_CLOSED")
+                if(e.ErrorText == "ERR_SSL_VERSION_OR_CIPHER_MISMATCH" || e.ErrorText == "ERR_SSL_PROTOCOL_ERROR")
                 {
                     httpsFailed = true;
                     browser.Dispatcher.Invoke(() => { RecordHistory(ProcessURL(e.FailedUrl, true, false)); });
@@ -116,6 +119,8 @@ namespace Browser
         private void UrlInput(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
+            TextBox txt = (TextBox)sender;
+            currTab.Url = txt.Text;
             if (currTab.Url == currTab.History[currTab.HistoryIndex])
             {
                 if (currTab.Url.Length != 0) refresh_url();
@@ -155,19 +160,23 @@ namespace Browser
         }
         private void refresh_Click(object sender, RoutedEventArgs e)
         {
-            refresh_url();
+            recordh = false;
+            browser.Reload();
+            recordh = true;
         }
         private void refresh_url()
         {
+            recordh = false;
             string temp = currTab.Url;
             currTab.Url = string.Empty;
             currTab.Url = temp;
+            recordh = true;
         }
         private void EnableDisableButtons()
         {
             foward.IsEnabled = CanShift(1);
             back.IsEnabled = CanShift(-1);
-            refresh.IsEnabled = (currTab.Url != "") ? false : true;
+            refresh.IsEnabled = (currTab.Url == "") ? false : true;
         }
         private bool CanShift(int dir)
         {

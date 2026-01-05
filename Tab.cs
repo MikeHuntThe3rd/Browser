@@ -12,6 +12,12 @@ namespace Browser
     public class Tab : INotifyPropertyChanged
     {
         private string _url = "";
+        public string _address = "";
+        public string Address
+        {
+            get => _address;
+            set { _address = value; OnPropertyChanged(); }
+        }
         public string Url
         {
             get => _url;

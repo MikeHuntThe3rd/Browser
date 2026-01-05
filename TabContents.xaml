@@ -161,10 +161,10 @@
         </Border>
 
         <Border Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <cef:ChromiumWebBrowser Address="{Binding Url, Mode=OneWay}"
+            <cef:ChromiumWebBrowser Address="{Binding Address, Mode=OneWay}"
                                     AddressChanged="_Page_AddressChanged"
                                     LoadError="_Page_LoadError"
-                                    />
+                                    x:Name="browser"/>
         </Border>
     </Grid>
 </UserControl>
