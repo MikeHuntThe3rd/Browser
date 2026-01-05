@@ -12,12 +12,6 @@ namespace Browser
     public class Tab : INotifyPropertyChanged
     {
         private string _url = "";
-        public string _address = "";
-        public string Address
-        {
-            get => _address;
-            set { _address = value; OnPropertyChanged(); }
-        }
         public string Url
         {
             get => _url;
@@ -26,7 +20,7 @@ namespace Browser
 
         public string Title { get; set; } = "New Tab";
 
-        public ObservableCollection<string> History { get; } = new ObservableCollection<string>();
+        public List<string> History { get; } = new List<string>() { "" };
         public int HistoryIndex { get; set; } = 0;
 
         public event PropertyChangedEventHandler PropertyChanged;
