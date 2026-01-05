@@ -35,6 +35,7 @@ namespace Browser
         {
             var NewTab = new Tab();
             TabHandler.Add(NewTab);
+            tabs.SelectedItem = NewTab;
         }
         public void Tab_Drag(object sender, MouseButtonEventArgs e) {
             Window CurrWin = Window.GetWindow((DependencyObject)sender);
