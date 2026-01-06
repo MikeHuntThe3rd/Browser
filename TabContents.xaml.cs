@@ -24,14 +24,12 @@ namespace Browser
     public partial class TabContents : UserControl
     {
         public Tab currtab => this.DataContext as Tab;
-        private List<string> URL_History;
-        private int HistoryIndex;
+        private List<string> URL_History = new List<string>(){ "" };
+        private int HistoryIndex = 0;
         private bool Page_Loaded = false, httpsFailed = false;
         public TabContents()
         {
             InitializeComponent();
-            URL_History = currtab.History;
-            HistoryIndex = currtab.HistoryIndex;
         }
         private void browser_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {

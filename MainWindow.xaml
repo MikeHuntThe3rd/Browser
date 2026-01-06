@@ -13,7 +13,6 @@
         Title="MainWindow">
 
     <Window.Resources>
-        <!--dragablz layout-->
         <ControlTemplate TargetType="{x:Type dragablz:TabablzControl}" x:Key="asd">
             <Grid>
                 <Grid.RowDefinitions>
@@ -26,57 +25,7 @@
                 </Border>
             </Grid>
         </ControlTemplate>
-        <!-- Chrome-like TabItem Style -->
-        <!--<Style TargetType="{x:Type dragablz:TabablzControl}" x:Key="ChromeTabItemStyle">
-            <Setter Property="Background" Value="Transparent"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="Padding" Value="12,6"/>
-            <Setter Property="Margin" Value="0,0,4,0"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="Template">
-                <Setter.Value>
-                    <ControlTemplate TargetType="{x:Type dragablz:DragablzItem}">
-                        <Grid>
-                            <Border x:Name="Bd"
-                                Background="Transparent"
-                                BorderBrush="Transparent"
-                                BorderThickness="0"
-                                CornerRadius="8,8,0,0"
-                                Padding="{TemplateBinding Padding}">
-                                <ContentPresenter x:Name="ContentSite"
-                                                VerticalAlignment="Center"
-                                                HorizontalAlignment="Center"
-                                                ContentSource="Header"
-                                                Margin="8,0"/>
-                            </Border>
-                            <Border x:Name="SelectedUnderline"
-                                Height="3"
-                                HorizontalAlignment="Stretch"
-                                VerticalAlignment="Bottom"
-                                Background="Transparent"
-                                CornerRadius="0,0,8,8"/>
-                        </Grid>
-                        <ControlTemplate.Triggers>
-                            <Trigger Property="IsSelected" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="White"/>
-                                <Setter TargetName="Bd" Property="BorderBrush" Value="#DDDDDD"/>
-                                <Setter TargetName="Bd" Property="BorderThickness" Value="1,1,1,0"/>
-                                <Setter TargetName="SelectedUnderline" Property="Background" Value="#4285F4"/>
-                            </Trigger>
-                            <Trigger Property="IsMouseOver" Value="True">
-                                <Setter TargetName="Bd" Property="Background" Value="#F5F5F5"/>
-                            </Trigger>
-                            <Trigger Property="IsEnabled" Value="False">
-                                <Setter Property="Foreground" Value="#888"/>
-                            </Trigger>
-                        </ControlTemplate.Triggers>
-                    </ControlTemplate>
-                </Setter.Value>
-            </Setter>
-        </Style>-->
         
-        <!-- Window control buttons (minimize, maximize, close, new tab) -->
         <Style TargetType="Button" x:Key="WindowControlButtonStyle">
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="28"/>
@@ -105,7 +54,6 @@
                 </Setter.Value>
             </Setter>
         </Style>
-        <!--invisible drag thumb-->
         <Style TargetType="{x:Type Thumb}" x:Key="InvisibleThumbStyle">
             <Setter Property="Background" Value="Transparent" />
             <Setter Property="Template">
@@ -127,12 +75,23 @@
                     <Setter Property="BorderThickness" Value="0"/>
                     <Setter Property="Padding" Value="0"/>
                     <Setter Property="Margin" Value="0"/>
-
-                    <Style.Triggers>
-                        <Trigger Property="IsMouseOver" Value="True">
-                            <Setter Property="Background" Value="Transparent"/>
-                        </Trigger>
-                    </Style.Triggers>
+                    <Setter Property="Template">
+                        <Setter.Value>
+                            <ControlTemplate>
+                                <Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" SnapsToDevicePixels="True">
+                                    <Grid>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                            <RowDefinition />
+                                        </Grid.RowDefinitions>
+                                        <Thumb Grid.Row="1" Width="0" Height="0" x:Name="PART_Thumb" />
+                                        <ContentPresenter Grid.Row="2" Content="{TemplateBinding ContentControl.Content}" ContentTemplate="{TemplateBinding ContentControl.ContentTemplate}" ContentStringFormat="{TemplateBinding ContentControl.ContentStringFormat}" HorizontalAlignment="{TemplateBinding Control.HorizontalContentAlignment}" VerticalAlignment="{TemplateBinding Control.VerticalContentAlignment}" SnapsToDevicePixels="{TemplateBinding UIElement.SnapsToDevicePixels}" />
+                                    </Grid>
+                                </Border>
+                            </ControlTemplate>
+                        </Setter.Value>
+                    </Setter>
                 </Style>
             </dragablz:TabablzControl.ItemContainerStyle>
             
