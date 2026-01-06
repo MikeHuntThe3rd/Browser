@@ -24,19 +24,15 @@ namespace Browser
     public partial class TabContents : UserControl
     {
         public Tab currtab => this.DataContext as Tab;
-        private List<string> URL_History;
-        private int HistoryIndex;
         private bool Page_Loaded = false, httpsFailed = false;
         public TabContents()
         {
             InitializeComponent();
-            URL_History = currtab.History;
-            HistoryIndex = currtab.HistoryIndex;
         }
         private void browser_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            URL.Text = browser.Address;
-            if (Page_Loaded) RecordHistory(URL.Text);
+            currtab.Url = browser.Address;
+            if (Page_Loaded) RecordHistory(currtab.Url);
             Page_Loaded = true;
             EnableDisableButtons();
         }
@@ -59,7 +55,7 @@ namespace Browser
             {
                 Page_Loaded = record;
                 HomePage();
-                URL.Text = url;
+                currtab.Url = url;
                 return url;
             }
             else
@@ -67,7 +63,7 @@ namespace Browser
                 Page_Loaded = record;
                 url = (isURL) ? https(url) : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 browser.Load(url);
-                URL.Text = url;
+                currtab.Url = url;
                 return url;
             }
         }
@@ -99,51 +95,42 @@ namespace Browser
                 }
             }
         }
-        private void DropBrowserInstance()
-        {
-            if (browser != null)
-            {
-                grid.Children.Remove(browser);
-                browser.Dispose();
-                browser = null;
-            }
-        }
         #region TabControls
         private void HomePage()
         {
-            DropBrowserInstance();
         }
         private void RecordHistory(string url)
         {
-            if (HistoryIndex == URL_History.Count())
+            if (currtab.HistoryIndex == currtab.History.Count())
             {
-                URL_History.Add(url);
-                HistoryIndex = URL_History.Count() - 1;
+                currtab.History.Add(url);
+                currtab.HistoryIndex = currtab.History.Count() - 1;
             }
-            else if (HistoryIndex < URL_History.Count())
+            else if (currtab.HistoryIndex < currtab.History.Count())
             {
-                for (int i = URL_History.Count() - 1; i > HistoryIndex; i--)
+                for (int i = currtab.History.Count() - 1; i > currtab.HistoryIndex; i--)
                 {
-                    URL_History.RemoveAt(i);
+                    currtab.History.RemoveAt(i);
                 }
-                URL_History.Add(url);
-                HistoryIndex = URL_History.Count() - 1;
+                currtab.History.Add(url);
+                currtab.HistoryIndex = currtab.History.Count() - 1;
             }
         }
         private void UrlInput(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
-            if (URL.Text == URL_History[HistoryIndex])
+            currtab.Url = URL.Text;
+            if (currtab.Url == currtab.History[currtab.HistoryIndex])
             {
-                if (URL.Text.Length != 0) browser.Reload();
+                if (currtab.Url.Length != 0) browser.Reload();
                 return;
             }
-            ProcessURL(URL.Text, IsURL_Valid(URL.Text));
+            ProcessURL(currtab.Url, IsURL_Valid(currtab.Url));
         }
         private void back_Click(object sender, RoutedEventArgs e)
         {
-            HistoryIndex--;
-            string url = URL_History[HistoryIndex];
+            currtab.HistoryIndex--;
+            string url = currtab.History[currtab.HistoryIndex];
             if (url.Length == 0)
             {
                 HomePage();
@@ -152,13 +139,13 @@ namespace Browser
             {
                 ProcessURL(url, IsURL_Valid(url), false);
             }
-            URL.Text = url;
+            currtab.Url = url;
             EnableDisableButtons();
         }
         private void foward_Click(object sender, RoutedEventArgs e)
         {
-            HistoryIndex++;
-            string url = URL_History[HistoryIndex];
+            currtab.HistoryIndex++;
+            string url = currtab.History[currtab.HistoryIndex];
             if (url.Length == 0)
             {
                 HomePage();
@@ -167,7 +154,7 @@ namespace Browser
             {
                 ProcessURL(url, IsURL_Valid(url), false);
             }
-            URL.Text = url;
+            currtab.Url = url;
             EnableDisableButtons();
         }
         private void refresh_Click(object sender, RoutedEventArgs e)
@@ -183,11 +170,16 @@ namespace Browser
             back.IsEnabled = CanShift(-1);
             refresh.IsEnabled = (browser == null) ? false : true;
         }
+        private void UserControl_Loaded(object sender, RoutedEventArgs e)
+        {
+            browser.Load(currtab.Url);
+            EnableDisableButtons();
+        }
         private bool CanShift(int dir)
         {
             try
             {
-                var val = URL_History[HistoryIndex + dir];
+                var val = currtab.History[currtab.HistoryIndex + dir];
                 return true;
             }
             catch (ArgumentOutOfRangeException e)
