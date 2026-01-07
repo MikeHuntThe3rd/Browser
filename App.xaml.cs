@@ -15,6 +15,7 @@ namespace Browser
     /// </summary>
     public partial class App : Application
     {
+        public static bool FirstTab = true;
         public App()
         {
             var settings = new CefSettings();
