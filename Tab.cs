@@ -12,13 +12,23 @@ namespace Browser
     public class Tab : INotifyPropertyChanged
     {
         private string _url = "";
+        private string _title = "New Tab";
+        private string _icon = "";
         public string Url
         {
             get => _url;
             set { _url = value; OnPropertyChanged(); }
         }
-
-        public string Title { get; set; } = "New Tab";
+        public string Title 
+        { 
+            get => _title;
+            set { _title = value; OnPropertyChanged(); }
+        }
+        public string Icon
+        {
+            get => _icon;
+            set { _icon = value; OnPropertyChanged(); }
+        }
 
         public List<string> History { get; } = new List<string>() { "" };
         public int HistoryIndex { get; set; } = 0;

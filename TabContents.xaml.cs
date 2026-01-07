@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -17,6 +18,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CefSharp;
 using CefSharp.Wpf;
+using HtmlAgilityPack;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace Browser
@@ -31,10 +33,13 @@ namespace Browser
         }
         private void browser_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
-            currtab.Url = browser.Address;
-            if (Page_Loaded) RecordHistory(currtab.Url);
+            DisableButtons();
+            if (Page_Loaded)
+            {
+                currtab.Url = browser.Address;
+                RecordHistory(currtab.Url);
+            }
             Page_Loaded = true;
-            EnableDisableButtons();
         }
         private bool IsURL_Valid(string url)
         {
@@ -51,6 +56,7 @@ namespace Browser
         }
         private string ProcessURL(string url, bool isURL, bool record = true)
         {
+            DisableButtons();
             if (url.Length == 0)
             {
                 Page_Loaded = record;
@@ -98,6 +104,9 @@ namespace Browser
         #region TabControls
         private void HomePage()
         {
+            Page_Loaded = false;
+            browser.Load("https://google.com");
+            Page_Loaded = false;
         }
         private void RecordHistory(string url)
         {
@@ -120,6 +129,7 @@ namespace Browser
         {
             if (e.Key != Key.Enter) return;
             currtab.Url = URL.Text;
+            if (currtab.Url == "") return;
             if (currtab.Url == currtab.History[currtab.HistoryIndex])
             {
                 if (currtab.Url.Length != 0) browser.Reload();
@@ -129,6 +139,7 @@ namespace Browser
         }
         private void back_Click(object sender, RoutedEventArgs e)
         {
+            DisableButtons();
             currtab.HistoryIndex--;
             string url = currtab.History[currtab.HistoryIndex];
             if (url.Length == 0)
@@ -140,10 +151,10 @@ namespace Browser
                 ProcessURL(url, IsURL_Valid(url), false);
             }
             currtab.Url = url;
-            EnableDisableButtons();
         }
         private void foward_Click(object sender, RoutedEventArgs e)
         {
+            DisableButtons();
             currtab.HistoryIndex++;
             string url = currtab.History[currtab.HistoryIndex];
             if (url.Length == 0)
@@ -155,25 +166,57 @@ namespace Browser
                 ProcessURL(url, IsURL_Valid(url), false);
             }
             currtab.Url = url;
-            EnableDisableButtons();
         }
         private void refresh_Click(object sender, RoutedEventArgs e)
         {
-            if (browser != null)
-            {
-                browser.Reload();
-            }
+            DisableButtons();
+            browser.Reload();
+            currtab.Url = currtab.History[currtab.HistoryIndex];
         }
-        private void EnableDisableButtons()
+        private void EnableButtons()
         {
             foward.IsEnabled = CanShift(1);
             back.IsEnabled = CanShift(-1);
-            refresh.IsEnabled = (browser == null) ? false : true;
+            refresh.IsEnabled = (browser.Address == "") ? false : true;
+        }
+        private void DisableButtons()
+        {
+            back.IsEnabled = false;
+            foward.IsEnabled = false;
+            refresh.IsEnabled = false;
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
-            browser.Load(currtab.Url);
-            EnableDisableButtons();
+            if (currtab.Url == "") HomePage();
+            else ProcessURL(currtab.Url, true, false);
+
+        }
+        private  void browser_LoadingStateChanged(object sender, LoadingStateChangedEventArgs e)
+        {
+            if (!e.IsLoading)
+            {
+                browser.Dispatcher.Invoke( () => EnableButtons());
+                browser.Dispatcher.Invoke( () => UsePageSource());
+            }
+        }
+        private async void UsePageSource()
+        {
+            string source = await browser.GetSourceAsync();
+            var html = new HtmlDocument();
+            html.LoadHtml(source);
+            string link = "../../../black-armory-forge-svgrepo-com.ico";
+            try
+            {
+                var title = html.DocumentNode.SelectSingleNode("//title");
+                currtab.Title = (title != null) ? title.InnerHtml : "New Tab";
+
+                var icon_link = html.DocumentNode.SelectNodes("//link");
+                link = (icon_link != null) ? icon_link.First(v => v.GetAttributeValue("rel", "").Equals("icon")).GetAttributeValue("href", "") : "";
+
+                link = (!link.Substring(0, 6).Equals("https:")) ? "https:" + link : link;
+            }
+            catch (Exception e) { }
+            currtab.Icon = link;
         }
         private bool CanShift(int dir)
         {

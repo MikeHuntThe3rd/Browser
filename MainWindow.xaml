@@ -8,6 +8,7 @@
         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
         mc:Ignorable="d"
         WindowStyle="None"
+        Loaded="Window_Loaded"
         Background="#EEE"
         ResizeMode="CanResize"
         Title="MainWindow">
@@ -101,17 +102,22 @@
                         <Border Background="White"
                                 Padding="10"
                                 CornerRadius="10,10,0,0"
-                                BorderThickness="0">        
+                                BorderThickness="0"
+                                 Height="36">        
                             <Grid>
                                 <Grid.ColumnDefinitions>
+                                    <!--<ColumnDefinition Width="{Binding ElementName=MainWindow, Path=width}"/>-->
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
-                                    <TextBlock Text="{Binding Title}" HorizontalAlignment="Left"/>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="{Binding Icon, Mode=OneWay}" />
+                                        <TextBlock Margin="5, 0" Text="{Binding Title ,Mode=OneWay}" HorizontalAlignment="Left"/>
+                                    </StackPanel>
                                     <Thumb dragablz:DragablzItem.IsCustomThumb="True" Style="{DynamicResource InvisibleThumbStyle}"/>
                                 </Grid>
-                                <Button Grid.Column="1" Content="×" Command="dragablz:TabablzControl.CloseItemCommand" Background="Transparent" Click="close_tab_Click" BorderThickness="0" Foreground="#B22222" FontWeight="Bold" Cursor="Hand"/>
+                                <Button Grid.Column="1" Content="×" Command="dragablz:TabablzControl.CloseItemCommand" Background="Transparent" BorderThickness="0" Foreground="#B22222" FontWeight="Bold" Cursor="Hand"/>
                             </Grid>
                         </Border>
                     </Grid>

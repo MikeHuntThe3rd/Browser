@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -23,36 +24,28 @@ namespace Browser
 {
     public partial class MainWindow : Window
     {
-        public ObservableCollection<Tab> TabHandler { get; } = new ObservableCollection<Tab>(); 
+        public ObservableCollection<Tab> TabHandler { get; } = new ObservableCollection<Tab>();
         public MainWindow()
         {
             InitializeComponent();
             tabs.InterTabController = TabDragManager.CreateController();
             tabs.ItemsSource = TabHandler;
         }
-
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            if (App.FirstTab)
+            {
+                App.FirstTab = false;
+                CreateTab();
+            }
+        }
         private void CreateTab()
         {
             var NewTab = new Tab();
             TabHandler.Add(NewTab);
             tabs.SelectedItem = NewTab;
         }
-        public void Tab_Drag(object sender, MouseButtonEventArgs e) {
-            Window CurrWin = Window.GetWindow((DependencyObject)sender);
-            CurrWin.DragMove();
-        }
         #region window buttons
-        private void close_tab_Click(object sender, RoutedEventArgs e)
-        {
-            if (tabs.SelectedItem is Tab tab)
-            {
-                TabHandler.Remove(tab);
-                if (TabHandler.Count == 0)
-                {
-                    Close();
-                }
-            }
-        }
         private void Drag(object sender, MouseButtonEventArgs e)
         {
             Window wn = Window.GetWindow((DependencyObject)sender);
