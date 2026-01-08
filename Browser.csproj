@@ -101,11 +101,18 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="home.xaml.cs">
+      <DependentUpon>home.xaml</DependentUpon>
+    </Compile>
     <Compile Include="TabContents.xaml.cs">
       <DependentUpon>TabContents.xaml</DependentUpon>
     </Compile>
     <Compile Include="TabDragManager.cs" />
     <Compile Include="Tab.cs" />
+    <Page Include="home.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

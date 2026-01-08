@@ -2,6 +2,7 @@
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:local="clr-namespace:Browser"
              Loaded="UserControl_Loaded">
 
     <Grid x:Name="grid" Background="#ECECEC">
@@ -162,11 +163,12 @@
             </Grid>
         </Border>
 
-        <Border Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <local:home x:Name="home" Visibility="Hidden"/>
             <cef:ChromiumWebBrowser AddressChanged="browser_AddressChanged"
                                     LoadError="browser_LoadError"
                                     x:Name="browser"
                                     LoadingStateChanged="browser_LoadingStateChanged"/>
-        </Border>
+        </Grid>
     </Grid>
 </UserControl>

@@ -104,9 +104,8 @@ namespace Browser
         #region TabControls
         private void HomePage()
         {
-            Page_Loaded = false;
-            browser.Load("https://google.com");
-            Page_Loaded = false;
+            browser.Visibility = Visibility.Hidden;
+            home.Visibility = Visibility.Visible;
         }
         private void RecordHistory(string url)
         {
@@ -211,9 +210,10 @@ namespace Browser
                 currtab.Title = (title != null) ? title.InnerHtml : "New Tab";
 
                 var icon_link = html.DocumentNode.SelectNodes("//link");
-                link = (icon_link != null) ? icon_link.First(v => v.GetAttributeValue("rel", "").Equals("icon")).GetAttributeValue("href", "") : "";
+                link = (icon_link != null) ? icon_link.First(v => v.GetAttributeValue("rel", "").Equals("icon") || v.GetAttributeValue("rel", "").Equals("shortcut icon")).GetAttributeValue("href", "") : "";
 
-                link = (!link.Substring(0, 6).Equals("https:")) ? "https:" + link : link;
+                link = (!link.Substring(0, 6).Equals("https:")) ? currtab.Url + link : link;
+                link = (currtab.Url.Contains("www.google.com") || currtab.Url.Count() == 0) ? "../../../black-armory-forge-svgrepo-com.ico" : link;
             }
             catch (Exception e) { }
             currtab.Icon = link;
