@@ -25,12 +25,13 @@
                     Margin="10,10,10,10"
                     Width="400" Height="36">
                 <Grid>
-                    <TextBox    Background="Transparent"
-                                Foreground="Black"
-                                BorderThickness="0"
-                                Padding="12,6"
-                                FontSize="14"
-                                VerticalContentAlignment="Center"/>
+                    <TextBox Text=""
+                             Background="Transparent"
+                             Foreground="Black"
+                             BorderThickness="0"
+                             Padding="12,6"
+                             FontSize="14"
+                             VerticalContentAlignment="Center"/>
                 </Grid>
             </Border>
         </Grid>
