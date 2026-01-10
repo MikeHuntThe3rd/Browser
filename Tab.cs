@@ -29,7 +29,6 @@ namespace Browser
             get => _icon;
             set { _icon = value; OnPropertyChanged(); }
         }
-
         public List<string> History { get; } = new List<string>() { "" };
         public int HistoryIndex { get; set; } = 0;
 
