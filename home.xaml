@@ -84,10 +84,7 @@
                 </Border>
             </Grid>
             <Grid Grid.Row="0" Grid.Column="2">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="auto" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
+                <!--BTN-->
                 <Border Width="32" Height="32" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="16" Margin="10" Background="#E9EAEC">
                     <Border.Style>
                         <Style TargetType="Border">
@@ -98,7 +95,7 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                     To="#D0D0D0" Duration="0:0:0.2"/>
+         To="#D0D0D0" Duration="0:0:0.2"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.EnterActions>
@@ -106,7 +103,7 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-                     To="#E9EAEC" Duration="0:0:0.2"/>
+         To="#E9EAEC" Duration="0:0:0.2"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.ExitActions>
@@ -115,17 +112,47 @@
                         </Style>
                     </Border.Style>
                     <Button x:Name="options" 
-            Content="⋮" 
-            FontSize="16"
-            Background="Transparent"
-            BorderThickness="0"
-            FocusVisualStyle="{x:Null}"
-            Foreground="#5F6368"
-            Click="options_Click"/>
+Content="⋮" 
+FontSize="16"
+Background="Transparent"
+BorderThickness="0"
+FocusVisualStyle="{x:Null}"
+Foreground="#5F6368"
+Click="options_Click"/>
                 </Border>
-                <Grid Grid.Row="1" >
-                    <!--AMONGUS-->
+                <Grid x:Name="tab" Visibility="Hidden">
+                    <!--OPTIONS-->
+                    <Grid x:Name="opt_tab" Visibility="Visible">
+                        <Border BorderBrush="Black">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                <StackPanel>
+                                    <TextBox x:Name="usr" Text="username" Padding="0" IsEnabled="True"/>
+                                    <TextBox x:Name="pass" Text="password" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal">
+                                    <Button x:Name="login" Content="log in" Click="login_Click" />
+                                    <Button x:Name="create" Content="create" Click="create_Click" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+                    <!--USER SETTINGS-->
+                    <Grid x:Name="tab_settings" Visibility="Hidden">
+                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
+                            <Button x:Name="LogOut" Content="log out" Click="LogOut_Click" />
+                            <ListBox x:Name="eng_opt">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate DataType="{x:Type local:engine}">
+                                        <StackPanel Orientation="Vertical">
+                                            <Button x:Name="eng" Click="eng_Click" Content="{Binding name}" />
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </StackPanel>
+                    </Grid>
                 </Grid>
+                
             </Grid>
         </Grid>
 
