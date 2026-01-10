@@ -1,31 +1,160 @@
-﻿using System;
+﻿using CefSharp;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+
 
 namespace Browser
 {
-    /// <summary>
-    /// Interaction logic for home.xaml
-    /// </summary>
     public partial class home : UserControl
     {
+        public Tab currtab => this.DataContext as Tab;
         public home()
         {
             InitializeComponent();
+            string debugPath = AppDomain.CurrentDomain.BaseDirectory;
+
+            string topFile = "left.png";
+            string bottomFile = "right.png";
+
+            double targetWidth = 100;
+            double targetHeight = 100;
+
+            string topPath = Path.Combine(debugPath, topFile);
+            if (File.Exists(topPath))
+            {
+                BitmapImage bitmap = new BitmapImage(new Uri(topPath));
+                TopImage.Source = bitmap;
+                TopImage.Width = targetWidth;
+                TopImage.Height = targetHeight;
+
+                Canvas.SetLeft(TopImage, 250);
+                Canvas.SetTop(TopImage, -targetHeight);
+            }
+
+            string bottomPath = Path.Combine(debugPath, bottomFile);
+            if (File.Exists(bottomPath))
+            {
+                BitmapImage bitmap = new BitmapImage(new Uri(bottomPath));
+                BottomImage.Source = bitmap;
+                BottomImage.Width = targetWidth;
+                BottomImage.Height = targetHeight;
+
+                Canvas.SetLeft(BottomImage, 350);
+                Canvas.SetTop(BottomImage, MainCanvas.Height);
+            }
+
+            MainCanvas.Loaded += MainCanvas_Loaded;
         }
 
         private void TextBlock_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key != Key.Enter) return;
+            GlobalData.SearchOverride = true;
+            GlobalData.IsUrl = false;
+            currtab.Url = search.Text;
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            fav button = (fav)(sender as FrameworkElement).DataContext;
+            GlobalData.SearchOverride = true;
+            GlobalData.IsUrl = true;
+            currtab.Url = button.Link;
+        }
+        private void MainCanvas_Loaded(object sender, RoutedEventArgs e)
+        {
+            AnimateImagesLoop();
+        }
+        private void AnimateImagesLoop()
+        {
+            double centerY = (MainCanvas.ActualHeight - TopImage.Height) / 2;
+            double centerX = (MainCanvas.ActualWidth - TopImage.Width) / 2;
+
+            double topStartY = -TopImage.Height;
+            double bottomStartY = MainCanvas.ActualHeight;
+
+            Canvas.SetLeft(TopImage, centerX - 35);
+            Canvas.SetLeft(BottomImage, centerX + 35);
+
+            double topFinalY = MainCanvas.ActualHeight;
+            double bottomFinalY = -BottomImage.Height;
+
+            Storyboard sb = new Storyboard();
+
+            IEasingFunction easeOut = new QuadraticEase { EasingMode = EasingMode.EaseOut }; // gyors → lassul
+            IEasingFunction easeIn = new QuadraticEase { EasingMode = EasingMode.EaseIn };    // lassan indul → gyorsul
+
+            double pauseTime = 2.0;
+            double endPause = 1.0;
+
+            // --- 1. Befelé mozgás ---
+            DoubleAnimation topToCenter = new DoubleAnimation(topStartY, centerY, TimeSpan.FromSeconds(1))
+            { EasingFunction = easeOut };
+            Storyboard.SetTarget(topToCenter, TopImage);
+            Storyboard.SetTargetProperty(topToCenter, new PropertyPath("(Canvas.Top)"));
+            sb.Children.Add(topToCenter);
+
+            DoubleAnimation bottomToCenter = new DoubleAnimation(bottomStartY, centerY, TimeSpan.FromSeconds(1))
+            { EasingFunction = easeOut };
+            Storyboard.SetTarget(bottomToCenter, BottomImage);
+            Storyboard.SetTargetProperty(bottomToCenter, new PropertyPath("(Canvas.Top)"));
+            sb.Children.Add(bottomToCenter);
+
+            // --- 2. Közép 2 mp megállás + kifelé mozgás ---
+            double moveOutBegin = 0.8 + pauseTime;
+
+            DoubleAnimation topMoveOut = new DoubleAnimation(centerY, topFinalY, TimeSpan.FromSeconds(1))
+            {
+                BeginTime = TimeSpan.FromSeconds(moveOutBegin),
+                EasingFunction = easeIn
+            };
+            Storyboard.SetTarget(topMoveOut, TopImage);
+            Storyboard.SetTargetProperty(topMoveOut, new PropertyPath("(Canvas.Top)"));
+            sb.Children.Add(topMoveOut);
+
+            DoubleAnimation bottomMoveOut = new DoubleAnimation(centerY, bottomFinalY, TimeSpan.FromSeconds(1))
+            {
+                BeginTime = TimeSpan.FromSeconds(moveOutBegin),
+                EasingFunction = easeIn
+            };
+            Storyboard.SetTarget(bottomMoveOut, BottomImage);
+            Storyboard.SetTargetProperty(bottomMoveOut, new PropertyPath("(Canvas.Top)"));
+            sb.Children.Add(bottomMoveOut);
+
+            // --- 3. Loop újraindítás ---
+            sb.Completed += (s, e) =>
+            {
+                // visszaállítás kezdőpozíciókra
+                Canvas.SetTop(TopImage, topStartY);
+                Canvas.SetTop(BottomImage, bottomStartY);
+
+                // kis szünet a végén, majd újraindítás
+                var delay = new System.Windows.Threading.DispatcherTimer
+                {
+                    Interval = TimeSpan.FromSeconds(endPause)
+                };
+                delay.Tick += (s2, e2) =>
+                {
+                    delay.Stop();
+                    AnimateImagesLoop(); // újraindítás
+                };
+                delay.Start();
+            };
+
+            sb.Begin();
+        }
+
+        private void options_Click(object sender, RoutedEventArgs e)
         {
 
         }

@@ -101,6 +101,8 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="fav.cs" />
+    <Compile Include="GlobalData.cs" />
     <Compile Include="home.xaml.cs">
       <DependentUpon>home.xaml</DependentUpon>
     </Compile>

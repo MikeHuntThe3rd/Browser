@@ -14,7 +14,7 @@
         Title="MainWindow">
 
     <Window.Resources>
-        <ControlTemplate TargetType="{x:Type dragablz:TabablzControl}" x:Key="asd">
+        <!--<ControlTemplate TargetType="{x:Type dragablz:TabablzControl}" x:Key="asd">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="36" />
@@ -25,7 +25,7 @@
                     <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="8"/>
                 </Border>
             </Grid>
-        </ControlTemplate>
+        </ControlTemplate>-->
         
         <Style TargetType="Button" x:Key="WindowControlButtonStyle">
             <Setter Property="Width" Value="20"/>
@@ -65,6 +65,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style TargetType="ContentPresenter" x:Key="selection">
+        </Style>
 
     </Window.Resources>
     <Grid x:Name="Tabgrid">
@@ -99,6 +101,7 @@
             <dragablz:TabablzControl.HeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
+                        
                         <Border Background="White"
                                 Padding="10"
                                 CornerRadius="10,10,0,0"
@@ -106,7 +109,6 @@
                                  Height="36">        
                             <Grid>
                                 <Grid.ColumnDefinitions>
-                                    <!--<ColumnDefinition Width="{Binding ElementName=MainWindow, Path=width}"/>-->
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="30"/>
                                 </Grid.ColumnDefinitions>

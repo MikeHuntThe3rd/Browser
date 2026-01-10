@@ -62,14 +62,17 @@ namespace Browser
                 Page_Loaded = record;
                 HomePage();
                 currtab.Url = url;
+                EnableButtons();
                 return url;
             }
             else
             {
+                LeftHomePage();
                 Page_Loaded = record;
                 url = (isURL) ? https(url) : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
                 browser.Load(url);
                 currtab.Url = url;
+                EnableButtons();
                 return url;
             }
         }
@@ -107,6 +110,11 @@ namespace Browser
             browser.Visibility = Visibility.Hidden;
             home.Visibility = Visibility.Visible;
         }
+        private void LeftHomePage()
+        {
+            browser.Visibility = Visibility.Visible;
+            home.Visibility = Visibility.Hidden;
+        }
         private void RecordHistory(string url)
         {
             if (currtab.HistoryIndex == currtab.History.Count())
@@ -136,6 +144,16 @@ namespace Browser
             }
             ProcessURL(currtab.Url, IsURL_Valid(currtab.Url));
         }
+        private void URL_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            string txt = ((TextBox)sender).Text;
+            if (GlobalData.SearchOverride && txt != "")
+            {
+                GlobalData.SearchOverride = false;
+                currtab.Url = txt;
+                ProcessURL(currtab.Url, GlobalData.IsUrl);
+            }
+        }
         private void back_Click(object sender, RoutedEventArgs e)
         {
             DisableButtons();
@@ -143,7 +161,7 @@ namespace Browser
             string url = currtab.History[currtab.HistoryIndex];
             if (url.Length == 0)
             {
-                HomePage();
+                ProcessURL(url, true, false);
             }
             else
             {
@@ -156,14 +174,7 @@ namespace Browser
             DisableButtons();
             currtab.HistoryIndex++;
             string url = currtab.History[currtab.HistoryIndex];
-            if (url.Length == 0)
-            {
-                HomePage();
-            }
-            else
-            {
-                ProcessURL(url, IsURL_Valid(url), false);
-            }
+            ProcessURL(url, IsURL_Valid(url), false);
             currtab.Url = url;
         }
         private void refresh_Click(object sender, RoutedEventArgs e)
@@ -217,6 +228,18 @@ namespace Browser
             }
             catch (Exception e) { }
             currtab.Icon = link;
+        }
+
+        private void MakeFavourtie_Click(object sender, RoutedEventArgs e)
+        {
+            if (currtab.Url == string.Empty) return;
+            var fav = new fav()
+            {
+                Title = currtab.Title,
+                Icon = currtab.Icon,
+                Link = currtab.Url
+            };
+            GlobalData.favs.Add(fav);
         }
         private bool CanShift(int dir)
         {

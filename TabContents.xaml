@@ -23,6 +23,7 @@
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
                 </Grid.ColumnDefinitions>
 
                 <!-- BACK BUTTON -->
@@ -156,15 +157,53 @@
                                  Padding="12,6"
                                  FontSize="14"
                                  VerticalContentAlignment="Center"
-                                 KeyDown="UrlInput"/>
+                                 KeyDown="UrlInput"
+                                 TextChanged="URL_TextChanged"/>
                     </Grid>
+                </Border>
+                
+                <!--FAVOURITE PAGE-->
+                <Border Width="32" Height="32" CornerRadius="16" Margin="2" Grid.Column="4" Background="#E9EAEC">
+                    <Border.Style>
+                        <Style TargetType="Border">
+                            <Setter Property="Background" Value="#E9EAEC"/>
+                            <Style.Triggers>
+                                <Trigger Property="IsMouseOver" Value="True">
+                                    <Trigger.EnterActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                 To="#D0D0D0" Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.EnterActions>
+                                    <Trigger.ExitActions>
+                                        <BeginStoryboard>
+                                            <Storyboard>
+                                                <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                                 To="#E9EAEC" Duration="0:0:0.2"/>
+                                            </Storyboard>
+                                        </BeginStoryboard>
+                                    </Trigger.ExitActions>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Border.Style>
+                    <Button x:Name="MakeFavourtie"
+                             Content="★"
+                             FontSize="16"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             FocusVisualStyle="{x:Null}"
+                             Foreground="#5F6368"
+                             Click="MakeFavourtie_Click"/>
                 </Border>
 
             </Grid>
         </Border>
-
+        
         <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-            <local:home x:Name="home" Visibility="Hidden"/>
+            <local:home x:Name="home" Visibility="Hidden" DataContext="{Binding}"/>
             <cef:ChromiumWebBrowser AddressChanged="browser_AddressChanged"
                                     LoadError="browser_LoadError"
                                     x:Name="browser"
