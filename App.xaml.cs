@@ -7,6 +7,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using CefSharp.Wpf;
+using CefSharp.DevTools.Audits;
 
 namespace Browser
 {
@@ -20,6 +21,10 @@ namespace Browser
         {
             var settings = new CefSettings();
             Cef.Initialize(settings);
+            setup();
+        }
+        public async static void setup()
+        {
         }
     }
 }

@@ -19,7 +19,6 @@ using System.Windows.Shapes;
 using CefSharp;
 using CefSharp.Wpf;
 using HtmlAgilityPack;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Browser
 {
@@ -69,7 +68,7 @@ namespace Browser
             {
                 LeftHomePage();
                 Page_Loaded = record;
-                url = (isURL) ? https(url) : $"https://www.google.com/search?q={Uri.EscapeDataString(url)}";
+                url = (isURL) ? https(url) : GlobalData.query + Uri.EscapeDataString(url);
                 browser.Load(url);
                 currtab.Url = url;
                 EnableButtons();
@@ -151,7 +150,10 @@ namespace Browser
             {
                 GlobalData.SearchOverride = false;
                 currtab.Url = txt;
+                
                 ProcessURL(currtab.Url, GlobalData.IsUrl);
+                browser.Visibility = Visibility.Visible;
+                home.Visibility = Visibility.Hidden;
             }
         }
         private void back_Click(object sender, RoutedEventArgs e)
@@ -229,10 +231,9 @@ namespace Browser
             catch (Exception e) { }
             currtab.Icon = link;
         }
-
         private void MakeFavourtie_Click(object sender, RoutedEventArgs e)
         {
-            if (currtab.Url == string.Empty) return;
+            if (home.Visibility == Visibility.Visible && IsURL_Valid(currtab.Url)) return;
             var fav = new fav()
             {
                 Title = currtab.Title,
@@ -240,6 +241,12 @@ namespace Browser
                 Link = currtab.Url
             };
             GlobalData.favs.Add(fav);
+            if (GlobalData.LoggedIn) DB.InsertData(Tuple.Create(GlobalData.userid, currtab.Icon, currtab.Url, currtab.Title));
+            var reopened = Window.GetWindow((DependencyObject)sender);
+            foreach (var win in Application.Current.Windows.Cast<Window>().ToList())
+            {
+                if (win != reopened) win.Close();
+            }
         }
         private bool CanShift(int dir)
         {
