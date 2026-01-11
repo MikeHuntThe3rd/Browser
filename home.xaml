@@ -6,13 +6,92 @@
              xmlns:local="clr-namespace:Browser"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+
+    <!-- ================= STYLES ================= -->
+    <UserControl.Resources>
+
+        <!-- MENU CARD -->
+        <Style x:Key="MenuCard" TargetType="Border">
+            <Setter Property="Background" Value="#F5F6F8"/>
+            <Setter Property="BorderBrush" Value="#DADCE0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="14"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect BlurRadius="10"
+                                      Opacity="0.2"
+                                      ShadowDepth="2"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- MENU BUTTON -->
+        <Style x:Key="MenuButton" TargetType="Button">
+            <Setter Property="Background" Value="#E9EAEC"/>
+            <Setter Property="Foreground" Value="#202124"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="Margin" Value="4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="bd"
+                                Background="{TemplateBinding Background}"
+                                >
+                            <ContentPresenter HorizontalAlignment="Center"
+                                              VerticalAlignment="Center"/>
+                        </Border>
+
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="bd"
+                                        Property="Background"
+                                        Value="#D0D0D0"/>
+                            </Trigger>
+
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="bd"
+                                        Property="RenderTransform">
+                                    <Setter.Value>
+                                        <ScaleTransform ScaleX="0.96"
+                                                        ScaleY="0.96"/>
+                                    </Setter.Value>
+                                </Setter>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- MENU TEXTBOX -->
+        <Style x:Key="MenuTextBox" TargetType="TextBox">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="BorderBrush" Value="#DADCE0"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,0,0,10"/>
+            <Setter Property="FontSize" Value="13"/>
+        </Style>
+
+    </UserControl.Resources>
+
+    <!-- ================= LAYOUT ================= -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
+
+        <!-- FAV BAR -->
         <Border Grid.Row="0" Background="White">
-            <ListBox x:Name="favourites" ItemsSource="{x:Static local:GlobalData.favs}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+            <ListBox x:Name="favourites"
+                     ItemsSource="{x:Static local:GlobalData.favs}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                      ScrollViewer.VerticalScrollBarVisibility="Disabled">
                 <ListBox.ItemsPanel>
                     <ItemsPanelTemplate>
@@ -21,18 +100,19 @@
                 </ListBox.ItemsPanel>
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:fav}">
-                        <StackPanel Orientation="Horizontal">
-                            <Button Click="Button_Click" MouseRightButtonDown="Button_MouseRightButtonDown">
-                                <StackPanel Orientation="Horizontal">
-                                    <Image Source="{Binding Icon}"/>
-                                    <Label Content="{Binding Title}"/>
-                                </StackPanel>
-                            </Button>
-                        </StackPanel>
+                        <Button Click="Button_Click"
+                                MouseRightButtonDown="Button_MouseRightButtonDown">
+                            <StackPanel Orientation="Horizontal">
+                                <Image Source="{Binding Icon}" />
+                                <Label Content="{Binding Title}" />
+                            </StackPanel>
+                        </Button>
                     </DataTemplate>
                 </ListBox.ItemTemplate>
             </ListBox>
         </Border>
+
+        <!-- MAIN -->
         <Grid Grid.Row="1" Background="White">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
@@ -43,49 +123,61 @@
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
-            <Border HorizontalAlignment="Center" Grid.Row="0" Grid.Column="1">
-                <Canvas Name="MainCanvas" ClipToBounds="True" Background="Transparent" Width="130">
+
+            <!-- LOGO -->
+            <Border HorizontalAlignment="Center"
+                    Grid.Row="0"
+                    Grid.Column="1">
+                <Canvas Name="MainCanvas"
+                        ClipToBounds="True"
+                        Background="Transparent"
+                        Width="130">
                     <Canvas.OpacityMask>
                         <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
-                            <!-- Top fade -->
-                            <GradientStop Color="Transparent" Offset="0.0"/>
+                            <GradientStop Color="Transparent" Offset="0"/>
                             <GradientStop Color="White" Offset="0.15"/>
-
-                            <!-- Fully visible middle -->
                             <GradientStop Color="White" Offset="0.85"/>
-
-                            <!-- Bottom fade -->
-                            <GradientStop Color="Transparent" Offset="1.0"/>
+                            <GradientStop Color="Transparent" Offset="1"/>
                         </LinearGradientBrush>
                     </Canvas.OpacityMask>
-                    <Image Name="TopImage" />
-                    <Image Name="BottomImage" />
+                    <Image Name="TopImage"/>
+                    <Image Name="BottomImage"/>
                 </Canvas>
             </Border>
+
+            <!-- SEARCH -->
             <Grid Grid.Row="1" Grid.ColumnSpan="3">
                 <Border CornerRadius="20"
                         Background="White"
                         BorderBrush="#DADCE0"
                         BorderThickness="2"
-                        Margin="10,10,10,10"
-                        Width="400" Height="36"
+                        Margin="10"
+                        Width="400"
+                        Height="36"
                         VerticalAlignment="Top">
-                    <Grid>
-                        <TextBox x:Name="search"
-                  Text="{Binding Url}"
-                  Background="Transparent"
-                  Foreground="Black"
-                  BorderThickness="0"
-                  Padding="12,6"
-                  FontSize="14"
-                  VerticalContentAlignment="Center"
-                  KeyDown="TextBlock_KeyDown"/>
-                    </Grid>
+                    <TextBox x:Name="search"
+                             Text="{Binding Url}"
+                             Background="Transparent"
+                             BorderThickness="0"
+                             Padding="12,6"
+                             FontSize="14"
+                             VerticalContentAlignment="Center"
+                             KeyDown="TextBlock_KeyDown"/>
                 </Border>
             </Grid>
+
+            <!-- OPTIONS -->
+            <!-- OPTIONS -->
             <Grid Grid.Row="0" Grid.Column="2">
-                <!--BTN-->
-                <Border Width="32" Height="32" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="16" Margin="10" Background="#E9EAEC">
+
+                <!-- ⋮ BUTTON -->
+                <Border Width="32"
+            Height="32"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Top"
+            CornerRadius="16"
+            Margin="10"
+            Background="#E9EAEC">
                     <Border.Style>
                         <Style TargetType="Border">
                             <Setter Property="Background" Value="#E9EAEC"/>
@@ -95,7 +187,8 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-         To="#D0D0D0" Duration="0:0:0.2"/>
+                                                    To="#D0D0D0"
+                                                    Duration="0:0:0.2"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.EnterActions>
@@ -103,7 +196,8 @@
                                         <BeginStoryboard>
                                             <Storyboard>
                                                 <ColorAnimation Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
-         To="#E9EAEC" Duration="0:0:0.2"/>
+                                                    To="#E9EAEC"
+                                                    Duration="0:0:0.2"/>
                                             </Storyboard>
                                         </BeginStoryboard>
                                     </Trigger.ExitActions>
@@ -111,50 +205,81 @@
                             </Style.Triggers>
                         </Style>
                     </Border.Style>
-                    <Button x:Name="options" 
-Content="⋮" 
-FontSize="16"
-Background="Transparent"
-BorderThickness="0"
-FocusVisualStyle="{x:Null}"
-Foreground="#5F6368"
-Click="options_Click"/>
+
+                    <Button x:Name="options"
+                Content="⋮"
+                FontSize="16"
+                Background="Transparent"
+                BorderThickness="0"
+                FocusVisualStyle="{x:Null}"
+                Foreground="#5F6368"
+                Click="options_Click"/>
                 </Border>
-                <Grid x:Name="tab" Visibility="Hidden">
-                    <!--OPTIONS-->
+
+                <!-- MENU (NEM FOLYIK RÁ A GOMBRA) -->
+                <Grid x:Name="tab"
+          Visibility="Hidden"
+          Width="300"
+          HorizontalAlignment="Right"
+          Margin="0,52,10,0">
+                    <!-- 52px lefelé tolva a gomb alá -->
+
+                    <!-- LOGIN -->
                     <Grid x:Name="opt_tab" Visibility="Visible">
-                        <Border BorderBrush="Black">
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <StackPanel>
-                                    <TextBox x:Name="usr" Text="username" Padding="0" IsEnabled="True"/>
-                                    <TextBox x:Name="pass" Text="password" />
+                        <Border Style="{StaticResource MenuCard}">
+                            <StackPanel>
+
+                                <TextBox x:Name="usr"
+                             Text="username"
+                             Style="{StaticResource MenuTextBox}"/>
+
+                                <TextBox x:Name="pass"
+                             Text="password"
+                             Style="{StaticResource MenuTextBox}"/>
+
+                                <StackPanel Orientation="Horizontal"
+                                HorizontalAlignment="Center">
+                                    <Button x:Name="login"
+                                Content="log in"
+                                Style="{StaticResource MenuButton}"
+                                Click="login_Click"/>
+                                    <Button x:Name="create"
+                                Content="create"
+                                Style="{StaticResource MenuButton}"
+                                Click="create_Click"/>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button x:Name="login" Content="log in" Click="login_Click" />
-                                    <Button x:Name="create" Content="create" Click="create_Click" />
-                                </StackPanel>
+
                             </StackPanel>
                         </Border>
                     </Grid>
-                    <!--USER SETTINGS-->
-                    <Grid x:Name="tab_settings" Visibility="Hidden">
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button x:Name="LogOut" Content="log out" Click="LogOut_Click" />
-                            <ListBox x:Name="eng_opt">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type local:engine}">
-                                        <StackPanel Orientation="Vertical">
-                                            <Button x:Name="eng" Click="eng_Click" Content="{Binding name}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
-                    </Grid>
-                </Grid>
-                
-            </Grid>
-        </Grid>
 
+                    <!-- SETTINGS -->
+                    <Grid x:Name="tab_settings" Visibility="Hidden">
+                        <Border Style="{StaticResource MenuCard}">
+                            <StackPanel HorizontalAlignment="Center">
+
+                                <Button x:Name="LogOut"
+                            Content="log out"
+                            Style="{StaticResource MenuButton}"
+                            Click="LogOut_Click"/>
+
+                                <ListBox x:Name="eng_opt">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:engine}">
+                                            <Button Content="{Binding name}"
+                                        Style="{StaticResource MenuButton}"
+                                        Click="eng_Click"/>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                </Grid>
+            </Grid>
+
+        </Grid>
     </Grid>
 </UserControl>
