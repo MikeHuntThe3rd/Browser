@@ -24,20 +24,21 @@ namespace Browser
     public partial class TabContents : UserControl
     {
         public Tab currtab => this.DataContext as Tab;
-        private bool Page_Loaded = false, httpsFailed = false;
+        private bool httpsFailed = false, Search = false;
         public TabContents()
         {
             InitializeComponent();
+            browser.RequestHandler = new RedirectHandler();
         }
         private void browser_AddressChanged(object sender, DependencyPropertyChangedEventArgs e)
         {
             DisableButtons();
-            if (Page_Loaded)
+            if (GlobalData.RecordAllowed || Search)
             {
                 currtab.Url = browser.Address;
                 RecordHistory(currtab.Url);
             }
-            Page_Loaded = true;
+            Search = false;
         }
         private bool IsURL_Valid(string url)
         {
@@ -57,7 +58,6 @@ namespace Browser
             DisableButtons();
             if (url.Length == 0)
             {
-                Page_Loaded = record;
                 HomePage();
                 currtab.Url = url;
                 currtab.Title = "New Title";
@@ -68,7 +68,6 @@ namespace Browser
             else
             {
                 LeftHomePage();
-                Page_Loaded = record;
                 url = (isURL) ? https(url) : GlobalData.query + Uri.EscapeDataString(url);
                 browser.Load(url);
                 currtab.Url = url;
@@ -141,6 +140,7 @@ namespace Browser
                 if (currtab.Url.Length != 0) browser.Reload();
                 return;
             }
+            Search = true;
             ProcessURL(currtab.Url, IsURL_Valid(currtab.Url));
         }
         private void URL_TextChanged(object sender, TextChangedEventArgs e)
@@ -150,7 +150,8 @@ namespace Browser
             {
                 GlobalData.SearchOverride = false;
                 currtab.Url = txt;
-                
+
+                Search = true;
                 ProcessURL(currtab.Url, GlobalData.IsUrl);
                 browser.Visibility = Visibility.Visible;
                 home.Visibility = Visibility.Hidden;

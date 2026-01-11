@@ -140,6 +140,7 @@
     <Compile Include="home.xaml.cs">
       <DependentUpon>home.xaml</DependentUpon>
     </Compile>
+    <Compile Include="RedirectHandler.cs" />
     <Compile Include="TabContents.xaml.cs">
       <DependentUpon>TabContents.xaml</DependentUpon>
     </Compile>
