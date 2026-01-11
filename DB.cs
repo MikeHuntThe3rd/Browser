@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -12,12 +13,12 @@ namespace Browser
 {
     public static class DB
     {
-        public static readonly MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
+        public static MySqlConnectionStringBuilder builder = new MySqlConnectionStringBuilder
         {
             Server = "localhost",
             UserID = "root",
             Password = "",
-            Database = "users_db",
+            Database = ""
         };
         public static MySqlConnection GetConn()
         {
@@ -112,5 +113,26 @@ namespace Browser
             cmd.Parameters.AddWithValue("newid", engine);
             cmd.ExecuteNonQuery();
         }
-}
+        public static void DeleteData(string link)
+        {
+            string sql = "DELETE FROM data WHERE link = @link;";
+            MySqlCommand cmd = new MySqlCommand(sql, GetConn());
+            cmd.Parameters.AddWithValue("link", link);
+            cmd.ExecuteNonQuery();
+        }
+        public static bool DBExists()
+        {
+            string sql = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = 'users_db';";
+            var cmd = new MySqlCommand(sql, GetConn());
+            var reader = cmd.ExecuteReader();
+            if(reader.HasRows) return true;
+            else return false;
+        }
+        public static void DBCreate()
+        {
+            string sql = File.ReadAllText(Path.Combine(GlobalData.debugPath, "users_db.sql"));
+            var cmd = new MySqlCommand(sql, GetConn());
+            cmd.ExecuteNonQuery();
+        }
+    }
 }

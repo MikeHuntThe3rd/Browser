@@ -22,7 +22,7 @@
                 <ListBox.ItemTemplate>
                     <DataTemplate DataType="{x:Type local:fav}">
                         <StackPanel Orientation="Horizontal">
-                            <Button Click="Button_Click" >
+                            <Button Click="Button_Click" MouseRightButtonDown="Button_MouseRightButtonDown">
                                 <StackPanel Orientation="Horizontal">
                                     <Image Source="{Binding Icon}"/>
                                     <Label Content="{Binding Title}"/>

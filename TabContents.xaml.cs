@@ -15,7 +15,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using System.Windows.Shapes;
 using CefSharp;
 using CefSharp.Wpf;
 using HtmlAgilityPack;
@@ -61,6 +60,8 @@ namespace Browser
                 Page_Loaded = record;
                 HomePage();
                 currtab.Url = url;
+                currtab.Title = "New Title";
+                currtab.Icon = "";
                 EnableButtons();
                 return url;
             }
@@ -71,7 +72,6 @@ namespace Browser
                 url = (isURL) ? https(url) : GlobalData.query + Uri.EscapeDataString(url);
                 browser.Load(url);
                 currtab.Url = url;
-                EnableButtons();
                 return url;
             }
         }
@@ -189,6 +189,7 @@ namespace Browser
         {
             foward.IsEnabled = CanShift(1);
             back.IsEnabled = CanShift(-1);
+            MakeFavourtie.IsEnabled = true;
             refresh.IsEnabled = (browser.Address == "") ? false : true;
         }
         private void DisableButtons()
@@ -196,6 +197,7 @@ namespace Browser
             back.IsEnabled = false;
             foward.IsEnabled = false;
             refresh.IsEnabled = false;
+            MakeFavourtie.IsEnabled = false;
         }
         private void UserControl_Loaded(object sender, RoutedEventArgs e)
         {
@@ -216,7 +218,7 @@ namespace Browser
             string source = await browser.GetSourceAsync();
             var html = new HtmlDocument();
             html.LoadHtml(source);
-            string link = "../../../black-armory-forge-svgrepo-com.ico";
+            string link = Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico");
             try
             {
                 var title = html.DocumentNode.SelectSingleNode("//title");
@@ -226,14 +228,27 @@ namespace Browser
                 link = (icon_link != null) ? icon_link.First(v => v.GetAttributeValue("rel", "").Equals("icon") || v.GetAttributeValue("rel", "").Equals("shortcut icon")).GetAttributeValue("href", "") : "";
 
                 link = (!link.Substring(0, 6).Equals("https:")) ? currtab.Url + link : link;
-                link = (currtab.Url.Contains("www.google.com") || currtab.Url.Count() == 0) ? "../../../black-armory-forge-svgrepo-com.ico" : link;
+                link = (currtab.Url.Contains("www.google.com") || 
+                    currtab.Url.Contains("www.bing.com") ||
+                    currtab.Url.Contains("duckduckgo.com") ||
+                    currtab.Url.Contains("search.yahoo.com") ||
+                    currtab.Url.Contains("www.qwant.com") ||
+                    currtab.Url.Count() == 0) ? Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico") : link;
             }
             catch (Exception e) { }
             currtab.Icon = link;
         }
         private void MakeFavourtie_Click(object sender, RoutedEventArgs e)
         {
-            if (home.Visibility == Visibility.Visible && IsURL_Valid(currtab.Url)) return;
+            if (home.Visibility == Visibility.Visible || !IsURL_Valid(currtab.Url)) return;
+            foreach (var curr in DB.GetUserData(GlobalData.userid))
+            {
+                if(curr.Link == currtab.Url)
+                {
+                    MessageBox.Show("a saved page already exists under this link");
+                    return;
+                }
+            }
             var fav = new fav()
             {
                 Title = currtab.Title,
