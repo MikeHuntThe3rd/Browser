@@ -244,9 +244,12 @@ namespace Browser
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {
             fav curr = (fav)(sender as FrameworkElement).DataContext;
-            foreach (var fav in DB.GetUserData(GlobalData.userid))
+            if (GlobalData.DbConn)
             {
-                if (fav.Link == curr.Link) DB.DeleteData(fav.Link);
+                foreach (var fav in DB.GetUserData(GlobalData.userid))
+                {
+                    if (fav.Link == curr.Link) DB.DeleteData(fav.Link);
+                }
             }
             GlobalData.favs.Remove(curr);
         }

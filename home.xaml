@@ -5,6 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:Browser"
              xmlns:cef="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
     
@@ -87,37 +88,39 @@
             </ControlTemplate.Triggers>
         </ControlTemplate>
     </UserControl.Resources>
-    
-
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Border Grid.Row="0" Background="White">
-            <ListBox x:Name="favourites" ItemsSource="{x:Static local:GlobalData.favs}" ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                     ScrollViewer.VerticalScrollBarVisibility="Disabled">
-                <ListBox.ItemsPanel>
-                    <ItemsPanelTemplate>
-                        <WrapPanel IsItemsHost="True" />
-                    </ItemsPanelTemplate>
-                </ListBox.ItemsPanel>
-                <ListBox.ItemTemplate>
-                    <DataTemplate DataType="{x:Type local:fav}">
-                        <StackPanel Orientation="Horizontal">
-                            <Border Style="{StaticResource brdr}" CornerRadius="6, 6, 6, 6" Padding="1">
-                                <Button Click="Button_Click" MouseRightButtonDown="Button_MouseRightButtonDown" BorderThickness="0" Template="{StaticResource NoMouseOverButtonTemplate}">
-                                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <cef:ChromiumWebBrowser Width="15" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Address="{Binding Icon}"/>
-                                        <Label Content="{Binding Title}" VerticalAlignment="Center"/>
-                                    </StackPanel>
-                                </Button>
-                            </Border>
-                            
-                        </StackPanel>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>
+            <ScrollViewer VerticalScrollBarVisibility="Hidden" HorizontalScrollBarVisibility="Visible">
+                <ScrollViewer.Resources>
+                    <sys:Double x:Key="{x:Static SystemParameters.HorizontalScrollBarHeightKey}">5</sys:Double>
+                </ScrollViewer.Resources>
+                <ListBox ScrollViewer.HorizontalScrollBarVisibility="Disabled" x:Name="favourites" ItemsSource="{x:Static local:GlobalData.favs}" ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <WrapPanel IsItemsHost="True" />
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate DataType="{x:Type local:fav}">
+                            <StackPanel Orientation="Horizontal">
+                                <Border Style="{StaticResource brdr}" CornerRadius="6, 6, 6, 6" Padding="1">
+                                    <Button Click="Button_Click" MouseRightButtonDown="Button_MouseRightButtonDown" BorderThickness="0" Template="{StaticResource NoMouseOverButtonTemplate}">
+                                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                            <cef:ChromiumWebBrowser Width="15" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" Address="{Binding Icon}"/>
+                                            <Label Content="{Binding Title}" VerticalAlignment="Center"/>
+                                        </StackPanel>
+                                    </Button>
+                                </Border>
+
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </ScrollViewer>
         </Border>
         <Grid Grid.Row="1" Background="White">
             <Grid.RowDefinitions>

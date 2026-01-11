@@ -110,6 +110,7 @@ namespace Browser
         {
             browser.Visibility = Visibility.Hidden;
             home.Visibility = Visibility.Visible;
+            currtab.Icon = Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico");
         }
         private void LeftHomePage()
         {
