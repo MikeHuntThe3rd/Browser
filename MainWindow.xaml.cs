@@ -44,6 +44,7 @@ namespace Browser
         private void CreateTab()
         {
             var NewTab = new Tab();
+            NewTab.Icon = System.IO.Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico");
             TabHandler.Add(NewTab);
             tabs.SelectedItem = NewTab;
         }

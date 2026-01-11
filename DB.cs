@@ -127,7 +127,8 @@ namespace Browser
             var reader = cmd.ExecuteReader();
             if(reader.HasRows) return true;
             else return false;
-        }public static bool ConnExists()
+        }
+        public static bool ConnExists()
         {
             try
             {

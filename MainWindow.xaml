@@ -12,21 +12,11 @@
         Background="#EEE"
         ResizeMode="CanResize"
         Title="MainWindow"
-        MinWidth="450">
+        MinWidth="450"
+        MinHeight="105">
 
     <Window.Resources>
-        <!--<ControlTemplate TargetType="{x:Type dragablz:TabablzControl}" x:Key="asd">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="36" />
-                    <RowDefinition Height="*" />
-                </Grid.RowDefinitions>
-                <dragablz:DragablzItemsControl x:Name="PART_HeaderItemsControl" Grid.Row="0" />
-                <Border Grid.Row="1">
-                    <ContentPresenter x:Name="PART_SelectedContentHost" ContentSource="SelectedContent" Grid.Row="1" Margin="8"/>
-                </Border>
-            </Grid>
-        </ControlTemplate>-->
+        
         <local:HeaderResize x:Key="resizer" />
         <Style TargetType="Button" x:Key="WindowControlButtonStyle">
             <Setter Property="Width" Value="20"/>
@@ -72,13 +62,6 @@
     </Window.Resources>
     <Grid x:Name="Tabgrid">
         <dragablz:TabablzControl x:Name="tabs" IsTabStop="False" ShowDefaultAddButton="False" ShowDefaultCloseButton="False">
-            
-            <!--<dragablz:TabablzControl.ItemsPanel>
-                <ItemsPanelTemplate>
-                    <UniformGrid Rows="1"/>
-                </ItemsPanelTemplate>
-            </dragablz:TabablzControl.ItemsPanel>-->
-            
             <dragablz:TabablzControl.ItemContainerStyle>
                 <Style TargetType="{x:Type dragablz:DragablzItem}">
                     <Setter Property="Background" Value="Transparent"/>
@@ -87,8 +70,8 @@
                     <Setter Property="Margin" Value="0"/>
                     <Setter Property="Template">
                         <Setter.Value>
-                            <ControlTemplate>
-                                <Border BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" SnapsToDevicePixels="True">
+                            <ControlTemplate TargetType="dragablz:DragablzItem">
+                                <Border  x:Name="bg" BorderThickness="{TemplateBinding Border.BorderThickness}" Padding="{TemplateBinding Control.Padding}" BorderBrush="{TemplateBinding Border.BorderBrush}" Background="{TemplateBinding Panel.Background}" SnapsToDevicePixels="True">
                                     <Grid>
                                         <Grid.RowDefinitions>
                                             <RowDefinition />
@@ -108,11 +91,21 @@
             <dragablz:TabablzControl.HeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
-                        <Border Background="White"
+                        <Border x:Name="border"
                                 Padding="10"
                                 CornerRadius="10,10,0,0"
                                 BorderThickness="0"
                                 Height="36">
+                            <Border.Style>
+                                <Style TargetType="Border">
+                                    <Setter Property="Background" Value="LightGray" />
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding RelativeSource={RelativeSource AncestorType=dragablz:DragablzItem}, Path=IsSelected}" Value="true">
+                                            <Setter Property="Background" Value="White" />
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Border.Style>
                             <Grid >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
@@ -120,7 +113,7 @@
                                 </Grid.ColumnDefinitions>
                                 <Grid Grid.Column="0">
                                     <StackPanel Orientation="Horizontal">
-                                        <Image Source="{Binding Icon, Mode=OneWay}" />
+                                        <cef:ChromiumWebBrowser Width="15" Height="15" HorizontalAlignment="Center" VerticalAlignment="Center" RenderOptions.BitmapScalingMode="HighQuality" Address="{Binding Icon, Mode=OneWay}" />
                                         <TextBlock Margin="5, 0" Text="{Binding Title ,Mode=OneWay}" HorizontalAlignment="Left"/>
                                     </StackPanel>
                                     <Thumb dragablz:DragablzItem.IsCustomThumb="True" Style="{DynamicResource InvisibleThumbStyle}"/>

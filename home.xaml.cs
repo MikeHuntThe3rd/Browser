@@ -23,7 +23,7 @@ namespace Browser
             InitializeComponent();
             if(!GlobalData.DbConn) options.IsEnabled = false;
             if (GlobalData.LoggedIn) SwitchVisibility();
-            eng_opt.ItemsSource = GlobalData.engines;
+            engine_list.ItemsSource = GlobalData.engines;
 
             string topFile = "left.png";
             string bottomFile = "right.png";
@@ -157,7 +157,7 @@ namespace Browser
         {
             usr.Text = "username";
             pass.Text = "password";
-            tab.Visibility = (tab.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible; 
+            tab.Visibility = (tab.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible;
         }
         private void create_Click(object sender, RoutedEventArgs e)
         {
@@ -191,7 +191,7 @@ namespace Browser
                     GlobalData.engines = DB.GetEngines();
                     GlobalData.LoggedIn = true;
                     App.FirstTab = true;
-                    foreach (var eng in eng_opt.Items)
+                    foreach (var eng in engine_list.Items)
                     {
                         var temp = (engine)(eng as FrameworkElement).DataContext;
                         if(temp.id == GlobalData.engineid)
@@ -239,6 +239,7 @@ namespace Browser
             GlobalData.query = eng.query;
             GlobalData.engineid = eng.id;
             DB.UpdateEngineId(GlobalData.userid, GlobalData.engineid);
+            tab.Visibility = Visibility.Hidden;
         }
         private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
         {

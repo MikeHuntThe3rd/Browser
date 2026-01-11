@@ -1,9 +1,13 @@
-﻿using System;
+﻿using CefSharp;
+using CefSharp.Wpf;
+using HtmlAgilityPack;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,9 +19,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
-using CefSharp;
-using CefSharp.Wpf;
-using HtmlAgilityPack;
+
+
 
 namespace Browser
 {
@@ -150,11 +153,9 @@ namespace Browser
             {
                 GlobalData.SearchOverride = false;
                 currtab.Url = txt;
-
+                if (browser.Address == currtab.Url) currtab.HistoryIndex++;
                 Search = true;
                 ProcessURL(currtab.Url, GlobalData.IsUrl);
-                browser.Visibility = Visibility.Visible;
-                home.Visibility = Visibility.Hidden;
             }
         }
         private void back_Click(object sender, RoutedEventArgs e)
@@ -237,17 +238,46 @@ namespace Browser
                     currtab.Url.Count() == 0) ? Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico") : link;
             }
             catch (Exception e) { }
+            try
+            {
+                using (var client = new HttpClient())
+                {
+                    var request = new HttpRequestMessage(HttpMethod.Head, link);
+                    var response = await client.SendAsync(request);
+
+                    if (!response.IsSuccessStatusCode && !response.Content.Headers.ContentType.MediaType.StartsWith("image/"))
+                        link = Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico");
+                }
+            }
+            catch
+            {
+                link = Path.Combine(GlobalData.debugPath, "black-armory-forge-svgrepo-com.ico");
+            }
             currtab.Icon = link;
         }
         private void MakeFavourtie_Click(object sender, RoutedEventArgs e)
         {
             if (home.Visibility == Visibility.Visible || !IsURL_Valid(currtab.Url)) return;
-            foreach (var curr in DB.GetUserData(GlobalData.userid))
+            if (GlobalData.DbConn && GlobalData.LoggedIn)
             {
-                if(curr.Link == currtab.Url)
+                foreach (var curr in DB.GetUserData(GlobalData.userid))
                 {
-                    MessageBox.Show("a saved page already exists under this link");
-                    return;
+                    if (curr.Link == currtab.Url)
+                    {
+                        MessageBox.Show("a saved page already exists under this link");
+                        return;
+                    }
+                }
+            }
+            else
+            {
+                foreach (var curr in GlobalData.favs)
+                {
+                    if (curr.Link == currtab.Url)
+                    {
+                        MessageBox.Show("a local page already exists under this link");
+                        return;
+                    }
                 }
             }
             var fav = new fav()
