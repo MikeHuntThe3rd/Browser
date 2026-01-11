@@ -6,6 +6,88 @@
              xmlns:local="clr-namespace:Browser"
              mc:Ignorable="d"
              d:DesignHeight="450" d:DesignWidth="800">
+    
+    <UserControl.Resources>
+        <Style x:Key="HoverSurface" TargetType="Border">
+            <Setter Property="Background" Value="#E9EAEC"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="10"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    To="#D0D0D0"
+                                    Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <ColorAnimation
+                                    Storyboard.TargetProperty="(Border.Background).(SolidColorBrush.Color)"
+                                    To="#E9EAEC"
+                                    Duration="0:0:0.2"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Flat button -->
+        <Style x:Key="FlatButton" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#5F6368"/>
+            <Setter Property="Padding" Value="12,6"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+        </Style>
+
+        <!-- TextBox -->
+        <Style x:Key="InputBox" TargetType="TextBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="4"/>
+            <Setter Property="Foreground" Value="#202124"/>
+        </Style>
+        <!--round border-->
+        <Style x:Key="brdr" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="10, 10, 10, 10"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="Black"/>
+            <Setter Property="Padding" Value="0" />
+            <Setter Property="Margin" Value="2" />
+        </Style>
+        <!--idk man-->
+        <ControlTemplate x:Key="NoMouseOverButtonTemplate"   
+                 TargetType="Button">
+            <Border Background="Transparent"  
+          BorderBrush="{TemplateBinding BorderBrush}"  
+          BorderThickness="{TemplateBinding BorderThickness}">
+                <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"  
+                      VerticalAlignment="{TemplateBinding VerticalContentAlignment}" />
+            </Border>
+
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsEnabled"  
+             Value="False">
+                    <Setter Property="Background"  
+              Value="{x:Static SystemColors.ControlLightBrush}" />
+                    <Setter Property="Foreground"  
+              Value="{x:Static SystemColors.GrayTextBrush}" />
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+    
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="40" />
@@ -84,6 +166,10 @@
                 </Border>
             </Grid>
             <Grid Grid.Row="0" Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
                 <!--BTN-->
                 <Border Width="32" Height="32" Grid.Row="0" HorizontalAlignment="Right" VerticalAlignment="Top" CornerRadius="16" Margin="10" Background="#E9EAEC">
                     <Border.Style>
@@ -120,36 +206,67 @@ FocusVisualStyle="{x:Null}"
 Foreground="#5F6368"
 Click="options_Click"/>
                 </Border>
-                <Grid x:Name="tab" Visibility="Hidden">
+                <Grid x:Name="tab" Visibility="Hidden" Grid.Row="1">
                     <!--OPTIONS-->
                     <Grid x:Name="opt_tab" Visibility="Visible">
-                        <Border BorderBrush="Black">
-                            <StackPanel Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-                                <StackPanel>
-                                    <TextBox x:Name="usr" Text="username" Padding="0" IsEnabled="True"/>
-                                    <TextBox x:Name="pass" Text="password" />
+                        <Border Background="LightGray" CornerRadius="10, 10, 10, 10" BorderThickness="2" BorderBrush="Black">
+                            <StackPanel Orientation="Vertical" HorizontalAlignment="Stretch" VerticalAlignment="Center" Margin="2">
+                                <StackPanel Margin="20">
+                                    <Border Style="{StaticResource brdr}">
+                                        <TextBox x:Name="usr" Text="username" BorderThickness="0" IsEnabled="True" VerticalAlignment="Stretch" Margin="5"/>
+                                    </Border>
+                                    <Border Style="{StaticResource brdr}">
+                                        <TextBox x:Name="pass" Text="password" BorderThickness="0" VerticalAlignment="Stretch" Margin="5"/>
+                                    </Border>
                                 </StackPanel>
-                                <StackPanel Orientation="Horizontal">
-                                    <Button x:Name="login" Content="log in" Click="login_Click" />
-                                    <Button x:Name="create" Content="create" Click="create_Click" />
-                                </StackPanel>
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <Border Style="{StaticResource brdr}" Background="LightBlue" Grid.Column="0">
+                                        <Button x:Name="login" Content="➜]" Click="login_Click" Template="{StaticResource NoMouseOverButtonTemplate}" BorderThickness="0" />
+                                    </Border>
+                                    <Border Style="{StaticResource brdr}" Background="LightCoral" Grid.Column="1">
+                                        <Button x:Name="create" Content="📋" Click="create_Click" BorderThickness="0" Template="{StaticResource NoMouseOverButtonTemplate}" />
+                                    </Border>
+                                </Grid>
                             </StackPanel>
                         </Border>
+                        
                     </Grid>
                     <!--USER SETTINGS-->
-                    <Grid x:Name="tab_settings" Visibility="Hidden">
-                        <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Orientation="Horizontal">
-                            <Button x:Name="LogOut" Content="log out" Click="LogOut_Click" />
-                            <ListBox x:Name="eng_opt">
-                                <ListBox.ItemTemplate>
-                                    <DataTemplate DataType="{x:Type local:engine}">
-                                        <StackPanel Orientation="Vertical">
-                                            <Button x:Name="eng" Click="eng_Click" Content="{Binding name}" />
-                                        </StackPanel>
-                                    </DataTemplate>
-                                </ListBox.ItemTemplate>
-                            </ListBox>
-                        </StackPanel>
+                    <Grid x:Name="tab_settings" Visibility="Hidden" Grid.Row="1">
+                        <Border Style="{StaticResource brdr}" Background="LightGray">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*" />
+                                    <ColumnDefinition Width="*" />
+                                </Grid.ColumnDefinitions>
+                                
+                                 <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource brdr}" Background="Red" VerticalAlignment="Center">
+                                    <Button x:Name="LogOut" Content="log out" Click="LogOut_Click" Template="{StaticResource NoMouseOverButtonTemplate}" BorderThickness="0"/>
+                                </Border>
+                                <Border Style="{StaticResource brdr}" Background="LightGray" Grid.Column="1" Grid.RowSpan="3">
+                                    <ListBox x:Name="eng_opt" Background="Transparent" BorderThickness="0">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate DataType="{x:Type local:engine}">
+                                            <StackPanel Orientation="Vertical">
+                                                <Button x:Name="eng" Click="eng_Click" Content="{Binding name}" Background="White" />
+                                            </StackPanel>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                </ListBox>
+                                </Border>
+                                
+                            </Grid>
+                        </Border>
+                       
                     </Grid>
                 </Grid>
                 

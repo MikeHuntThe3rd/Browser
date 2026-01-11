@@ -11,7 +11,8 @@
         Loaded="Window_Loaded"
         Background="#EEE"
         ResizeMode="CanResize"
-        Title="MainWindow">
+        Title="MainWindow"
+        MinWidth="450">
 
     <Window.Resources>
         <!--<ControlTemplate TargetType="{x:Type dragablz:TabablzControl}" x:Key="asd">
@@ -26,7 +27,7 @@
                 </Border>
             </Grid>
         </ControlTemplate>-->
-        
+        <local:HeaderResize x:Key="resizer" />
         <Style TargetType="Button" x:Key="WindowControlButtonStyle">
             <Setter Property="Width" Value="20"/>
             <Setter Property="Height" Value="28"/>
@@ -71,7 +72,13 @@
     </Window.Resources>
     <Grid x:Name="Tabgrid">
         <dragablz:TabablzControl x:Name="tabs" IsTabStop="False" ShowDefaultAddButton="False" ShowDefaultCloseButton="False">
-
+            
+            <!--<dragablz:TabablzControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <UniformGrid Rows="1"/>
+                </ItemsPanelTemplate>
+            </dragablz:TabablzControl.ItemsPanel>-->
+            
             <dragablz:TabablzControl.ItemContainerStyle>
                 <Style TargetType="{x:Type dragablz:DragablzItem}">
                     <Setter Property="Background" Value="Transparent"/>
@@ -101,13 +108,12 @@
             <dragablz:TabablzControl.HeaderItemTemplate>
                 <DataTemplate>
                     <Grid Background="Transparent">
-                        
                         <Border Background="White"
                                 Padding="10"
                                 CornerRadius="10,10,0,0"
                                 BorderThickness="0"
-                                 Height="36">        
-                            <Grid>
+                                Height="36">
+                            <Grid >
                                 <Grid.ColumnDefinitions>
                                     <ColumnDefinition Width="auto"/>
                                     <ColumnDefinition Width="30"/>

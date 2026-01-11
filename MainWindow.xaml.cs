@@ -25,11 +25,12 @@ namespace Browser
     public partial class MainWindow : Window
     {
         public ObservableCollection<Tab> TabHandler { get; } = new ObservableCollection<Tab>();
+        public int size { get; set; }
         public MainWindow()
         {
             InitializeComponent();
-            tabs.InterTabController = TabDragManager.CreateController();
             tabs.ItemsSource = TabHandler;
+            tabs.InterTabController = TabDragManager.CreateController();
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -38,6 +39,7 @@ namespace Browser
                 App.FirstTab = false;
                 CreateTab();
             }
+            size = 500;
         }
         private void CreateTab()
         {

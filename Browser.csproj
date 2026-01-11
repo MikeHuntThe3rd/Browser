@@ -137,6 +137,7 @@
     <Compile Include="engine.cs" />
     <Compile Include="fav.cs" />
     <Compile Include="GlobalData.cs" />
+    <Compile Include="HeaderResize.cs" />
     <Compile Include="home.xaml.cs">
       <DependentUpon>home.xaml</DependentUpon>
     </Compile>

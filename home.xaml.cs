@@ -155,6 +155,8 @@ namespace Browser
         }
         private void options_Click(object sender, RoutedEventArgs e)
         {
+            usr.Text = "username";
+            pass.Text = "password";
             tab.Visibility = (tab.Visibility == Visibility.Visible) ? Visibility.Hidden : Visibility.Visible; 
         }
         private void create_Click(object sender, RoutedEventArgs e)
@@ -189,6 +191,14 @@ namespace Browser
                     GlobalData.engines = DB.GetEngines();
                     GlobalData.LoggedIn = true;
                     App.FirstTab = true;
+                    foreach (var eng in eng_opt.Items)
+                    {
+                        var temp = (engine)(eng as FrameworkElement).DataContext;
+                        if(temp.id == GlobalData.engineid)
+                        {
+
+                        }
+                    }
                     SwitchVisibility();
 
                     var reopened = new MainWindow();
