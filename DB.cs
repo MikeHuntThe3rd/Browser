@@ -127,6 +127,15 @@ namespace Browser
             var reader = cmd.ExecuteReader();
             if(reader.HasRows) return true;
             else return false;
+        }public static bool ConnExists()
+        {
+            try
+            {
+                var connection = new MySqlConnection(builder.ConnectionString);
+                connection.Open();
+                return true;
+            }
+            catch { return false; }
         }
         public static void DBCreate()
         {
