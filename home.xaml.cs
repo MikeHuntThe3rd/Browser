@@ -21,9 +21,9 @@ namespace Browser
         public home()
         {
             InitializeComponent();
+            if(!GlobalData.DbConn) options.IsEnabled = false;
             if (GlobalData.LoggedIn) SwitchVisibility();
             eng_opt.ItemsSource = GlobalData.engines;
-            string debugPath = AppDomain.CurrentDomain.BaseDirectory;
 
             string topFile = "left.png";
             string bottomFile = "right.png";
@@ -31,7 +31,7 @@ namespace Browser
             double targetWidth = 100;
             double targetHeight = 100;
 
-            string topPath = Path.Combine(debugPath, topFile);
+            string topPath = Path.Combine(GlobalData.debugPath, topFile);
             if (File.Exists(topPath))
             {
                 BitmapImage bitmap = new BitmapImage(new Uri(topPath));
@@ -43,7 +43,7 @@ namespace Browser
                 Canvas.SetTop(TopImage, -targetHeight);
             }
 
-            string bottomPath = Path.Combine(debugPath, bottomFile);
+            string bottomPath = Path.Combine(GlobalData.debugPath, bottomFile);
             if (File.Exists(bottomPath))
             {
                 BitmapImage bitmap = new BitmapImage(new Uri(bottomPath));
@@ -57,7 +57,6 @@ namespace Browser
 
             MainCanvas.Loaded += MainCanvas_Loaded;
         }
-
         private void TextBlock_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key != Key.Enter) return;
@@ -65,7 +64,6 @@ namespace Browser
             GlobalData.IsUrl = false;
             currtab.Url = search.Text;
         }
-
         private void Button_Click(object sender, RoutedEventArgs e)
         {
             fav button = (fav)(sender as FrameworkElement).DataContext;
@@ -170,6 +168,7 @@ namespace Browser
                 }
             }
             DB.InsertUser(Tuple.Create(usr.Text, pass.Text, 1));
+            MessageBox.Show("created new account");
         }
         private void SwitchVisibility()
         {
@@ -230,6 +229,15 @@ namespace Browser
             GlobalData.query = eng.query;
             GlobalData.engineid = eng.id;
             DB.UpdateEngineId(GlobalData.userid, GlobalData.engineid);
+        }
+        private void Button_MouseRightButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            fav curr = (fav)(sender as FrameworkElement).DataContext;
+            foreach (var fav in DB.GetUserData(GlobalData.userid))
+            {
+                if (fav.Link == curr.Link) DB.DeleteData(fav.Link);
+            }
+            GlobalData.favs.Remove(curr);
         }
     }
 }

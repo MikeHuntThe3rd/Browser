@@ -190,6 +190,7 @@
                         </Style>
                     </Border.Style>
                     <Button x:Name="MakeFavourtie"
+                             IsEnabled="False"
                              Content="★"
                              FontSize="16"
                              Background="Transparent"

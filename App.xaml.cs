@@ -21,10 +21,15 @@ namespace Browser
         {
             var settings = new CefSettings();
             Cef.Initialize(settings);
-            setup();
-        }
-        public async static void setup()
-        {
+            if (DB.GetConn().State == ConnectionState.Open)
+            {
+                if(!DB.DBExists()) DB.DBCreate();
+                DB.builder.Database = "users_db";
+            }
+            else
+            {
+                GlobalData.DbConn = false;
+            }
         }
     }
 }
