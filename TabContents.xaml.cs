@@ -94,7 +94,7 @@ namespace Browser
         {
             if (e.Frame.IsMain)
             {
-                if (e.ErrorText == "ERR_CONNECTION_CLOSED")
+                if (e.ErrorText == "ERR_CONNECTION_CLOSED" || e.ErrorText == "ERR_SSL_VERSION_OR_CIPHER_MISMATCH")
                 {
                     httpsFailed = true;
                     browser.Dispatcher.Invoke(() => { RecordHistory(ProcessURL(e.FailedUrl, true, false)); });
